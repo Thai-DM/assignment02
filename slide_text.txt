@@ -1,0 +1,969 @@
+﻿Intelligent System Development
+Lecture 02 ΓÇö Data Representation and Intelligent Systems
+Dinh Que Tran, Ph.D., Assoc. Prof.
+Department of Information Technology
+Posts and Telecommunications Institute of Technology (PTIT)
+quetd@ptit.edu.vn, tdque@yahoo.com
+2026
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+1 / 37
+
+Lecture 02: Data Representation
+From Real-World Data to Machine-Learning Representations
+Real World
+Objects, events, people
+Raw Data
+CSV, image, text, audio
+Representation
+vector, matrix, tensor
+ML Model
+learning
+Output
+prediction / decision
+Central Question
+How do we transform heterogeneous real-world data into representations that an intelligent
+system can process, learn from, evaluate, and deploy?
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+2 / 37
+
+Why Data Representation Matters
+The same information can have different
+representations
+Raw image
+Pixel matrix
+Normalized tensor
+CNN feature tensor
+Feature vector
+A model expects a specific representation
+Shape
+Data type
+Value range
+Ordering
+Semantic meaning
+Preprocessing
+Key Principle
+A file format is not the same thing as a machine-learning representation.
+File╠╕ = Representation╠╕ = Model Input
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+3 / 37
+
+Different Forms of Data
+Data form
+Typical files
+Example
+Tabular
+CSV, Excel, SQL
+customer records
+Image
+JPEG, PNG, TIFF
+medical image
+Text
+TXT, JSON, PDF
+document / review
+Audio
+WAV, MP3
+speech recording
+Video
+MP4, AVI
+surveillance video
+Time series
+CSV, database
+sensor measurements
+Graph
+JSON, edge list
+social network
+Common Goal
+Regardless of the original data form, an intelligent system eventually needs a numerical
+representation.
+Raw Data
+ΓåÆNumerical Representation
+ΓåÆLearning
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+4 / 37
+
+From Scalar to Vector, Matrix, and Tensor
+Scalar
+x = 3.7
+Vector
+x ΓêêRd
+Matrix
+X ΓêêRm├ùn
+Tensor
+X ΓêêRd1├ù┬╖┬╖┬╖├ùdk
+Scalar: one numerical value.
+Vector: an ordered collection of values.
+Matrix: a two-dimensional array.
+Tensor: a general multi-dimensional array.
+Important
+Vectors, matrices, and tensors are not different kinds of ΓÇ£intelligenceΓÇ¥ ΓÇö they are different
+mathematical structures used to organize numerical information.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+5 / 37
+
+Vector Representation
+A vector represents one ordered set of numerical values:
+x =
+∩ú«
+∩ú»∩ú»∩ú»∩ú»∩ú░
+x1
+x2
+...
+xd
+∩ú╣
+∩ú║∩ú║∩ú║∩ú║∩ú╗
+ΓêêRd
+Example: one customer
+x =
+∩ú«
+∩ú»∩ú»∩ú»∩ú░
+25
+4.2
+12
+0.73
+∩ú╣
+∩ú║∩ú║∩ú║∩ú╗
+where the components might represent:
+Age
+Spending
+Purchases
+Loyalty
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+6 / 37
+
+Matrix Representation
+Suppose we have N samples and d features.
+X =
+∩ú«
+∩ú»∩ú»∩ú»∩ú»∩ú░
+x11
+x12
+┬╖ ┬╖ ┬╖
+x1d
+x21
+x22
+┬╖ ┬╖ ┬╖
+x2d
+...
+...
+...
+...
+xN1
+xN2
+┬╖ ┬╖ ┬╖
+xNd
+∩ú╣
+∩ú║∩ú║∩ú║∩ú║∩ú╗
+ΓêêRN├ùd
+N = number of samples
+d = number of features
+xi = one sample
+x:j = one feature
+Typical tabular representation
+X ΓêêRN├ùd
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+7 / 37
+
+Tensor Representation
+A tensor generalizes vectors and matrices to higher dimensions.
+X ΓêêRd1├ùd2├ù┬╖┬╖┬╖├ùdk
+Data
+Typical shape
+Meaning
+Tabular batch
+B ├ù d
+samples ├ù features
+Image
+C ├ù H ├ù W
+channels ├ù height ├ù width
+Image batch
+B ├ù C ├ù H ├ù W
+batch of images
+Text IDs
+B ├ù T
+batch ├ù tokens
+Text embeddings
+B ├ù T ├ù d
+batch ├ù tokens ├ù embedding
+Video
+B ├ù C ├ù T ├ù H ├ù W
+video batch
+Core idea
+The meaning of every axis must be understood, not merely its size.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+8 / 37
+
+CSV: From File to Feature Matrix
+CSV File
+Age
+BMI
+BP
+Glu
+Class
+21
+22.1
+120
+95
+0
+35
+27.4
+130
+110
+1
+48
+31.2
+145
+160
+1
+62
+29.8
+150
+180
+2
+4 rows
+| {z }
+4 samples
+4 feature columns
+|
+{z
+}
+inputs
++
+Class
+| {z }
+target
+ML Representation
+X =
+∩ú«
+∩ú»∩ú»∩ú»∩ú░
+21
+22.1
+120
+95
+35
+27.4
+130
+110
+48
+31.2
+145
+160
+62
+29.8
+150
+180
+∩ú╣
+∩ú║∩ú║∩ú║∩ú╗
+X ΓêêR4├ù4
+y =
+∩ú«
+∩ú»∩ú»∩ú»∩ú░
+0
+1
+1
+2
+∩ú╣
+∩ú║∩ú║∩ú║∩ú╗
+y ΓêêR4
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+9 / 37
+
+CSV: Batch Representation
+For tabular learning:
+X ΓêêRN├ùd
+where: N = total number of samples, d = number of input features.
+During mini-batch training: Xbatch ΓêêRB├ùd where B is the batch size.
+Example
+N = 10 000,
+d = 20,
+B = 32
+Full dataset:
+X ΓêêR10000├ù20
+One training batch:
+Xbatch ΓêêR32├ù20
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+10 / 37
+
+Categorical Data Representation
+Not every CSV value is naturally numerical.
+Example:
+Raw value
+Problem
+Possible representation
+Male / Female
+categorical
+one-hot / embedding
+Red / Green / Blue
+categorical
+one-hot / embedding
+Low / Medium / High
+ordinal
+ordered encoding
+Hanoi / Hue / Da Nang
+nominal
+one-hot / embedding
+Common mistake
+Encoding categories as 1, 2, 3 does not automatically mean that category 3 is ΓÇ£greaterΓÇ¥ than
+category 1.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+11 / 37
+
+Image Representation: Pixels
+An image is a structured collection of pixels.
+Grayscale image: X ΓêêRH├ùW
+RGB image: X ΓêêRH├ùW ├ù3
+or, in channel-first form:
+X ΓêêR3├ùH├ùW
+Pixel values
+For an 8-bit RGB image: xhwc Γêê{0, 1, . . . , 255}
+After conversion to floating point: xhwc Γêê[0, 1]
+or after a different normalization: xhwc Γêê[ΓêÆ1, 1].
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+12 / 37
+
+Image Representation: Batch Tensor
+A single RGB image: X ΓêêRC├ùH├ùW
+A mini-batch: X ΓêêRB├ùC├ùH├ùW
+JPEG / PNG
+Pixels
+H ├ù W ├ù C
+Reorder
+C ├ù H ├ù W
+Batch
+B ├ù C ├ù H ├ù W
+PyTorch example
+B = 32,
+C = 3,
+H = W = 224
+torch.Size([32,3,224,224])
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+13 / 37
+
+Image Data: Channel Ordering
+Channel-last
+H ├ù W ├ù C
+Example:
+224 ├ù 224 ├ù 3
+Common in:
+NumPy image arrays
+OpenCV
+TensorFlow/Keras
+Channel-first
+C ├ù H ├ù W
+Example:
+3 ├ù 224 ├ù 224
+Common in:
+PyTorch
+Many CNN implementations
+Practical lesson
+Always check the expected tensor convention before passing data to a model.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+14 / 37
+
+Text Representation: From Symbols to Numbers
+Raw Text
+ΓÇ£AI is usefulΓÇ¥
+Tokens
+AI | is | useful
+Token IDs
+42 | 17 | 381
+Embeddings
+e1, e2, e3
+ei ΓêêRd
+Key Idea
+Text is symbolic. Machine-learning models operate on numerical representations, so text must
+be transformed into tokens, integer IDs, and ultimately vectors.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+15 / 37
+
+Text Representation: Token IDs
+1. Vocabulary
+A tokenizer maps each token to an integer:
+f : V ΓåÆ{0, 1, . . . , V ΓêÆ1}
+Example:
+AI ΓåÆ42
+is ΓåÆ17
+useful ΓåÆ381
+2. Sequence and Batch
+For one sentence:
+xid = [x1, . . . , xT] ΓêêNT
+For a batch:
+Xid ΓêêNB├ùT
+Example:
+B = 32,
+T = 128
+Xid ΓêêN32├ù128
+I
+t
+t
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+16 / 37
+
+Text Representation: Token IDs (cont)
+What do the numbers mean?
+Token IDs are integer indices, not semantic values.
+ΓÇ£AI is usefulΓÇ¥ ΓåÆ[12, 45, 81]
+12 = ID(AI),
+45 = ID(is),
+81 = ID(useful)
+ID ΓåÆEmbedding Lookup ΓåÆDense Vector
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+17 / 37
+
+Text Representation: Embeddings
+xi
+Embedding Layer
+ΓêÆΓêÆΓêÆΓêÆΓêÆΓêÆΓêÆΓêÆΓêÆΓêÆΓåÆ
+ei ΓêêRd
+For a sequence of T tokens:
+E =
+∩ú«
+∩ú»∩ú»∩ú»∩ú»∩ú░
+eT
+1
+eT
+2...
+eT
+T
+∩ú╣
+∩ú║∩ú║∩ú║∩ú║∩ú╗
+ΓêêRT├ùd
+For a batch:
+E ΓêêRB├ùT├ùd
+Example
+Meaning of Dimensions
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+18 / 37
+
+Text: Padding and Masking
+Sentences have different lengths
+ΓÇ£AI is usefulΓÇ¥
+3 tokens
+ΓÇ£AI is useful for healthcareΓÇ¥
+5 tokens
+To create a batch, shorter sequences are padded
+Xid =
+"
+12
+45
+81
+0
+0
+12
+45
+81
+73
+19
+#
+0
+|{z}
+padding
+B = 2,
+T = 5
+Attention mask
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+19 / 37
+
+From Data to Numerical Tensors
+Data Modality
+Numerical
+Representation
+Typical Batch Shape
+Tabular
+Feature matrix
+B ├ù d
+Image
+Pixel tensor
+B ├ù C ├ù H ├ù W
+Text
+Token IDs
+B ├ù T
+Text
+Token embeddings
+B ├ù T ├ù d
+Audio
+Sample sequence
+B ├ù T
+Video
+Spatiotemporal tensor
+B ├ù C ├ù T ├ù H ├ù W
+Time series
+Feature sequence
+B ├ù T ├ù d
+Key Idea
+Different modalities have different structures, but modern ML systems usually convert them
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+20 / 37
+
+Data Representation Is More Than Shape
+For a tensor X, we should understand:
+1 Shape ΓÇö What are the dimensions?
+2 Semantics ΓÇö What does each axis mean?
+3 Dtype ΓÇö How are values stored?
+4 Range ΓÇö What values are valid?
+5 Scale ΓÇö Are numerical magnitudes comparable?
+6 Ordering ΓÇö Does position have meaning?
+7 Missing values ΓÇö How are they represented?
+8 Encoding ΓÇö How were categories/tokens converted?
+Example
+X ΓêêR32├ù224├ù224├ù3
+The shape alone does not tell us whether the tensor is RGB or BGR, normalized or
+unnormalized, channel-first or channel-last.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+21 / 37
+
+Data Types and Value Ranges
+Dtype
+Typical use
+Example
+uint8
+raw image pixels
+0, . . . , 255
+int64
+token/class IDs
+0, 1, 2, . . .
+float32
+neural-network input
+real values
+float64
+scientific computation
+high precision
+bool
+masks
+True / False
+Image example Xraw Γêê{0, . . . , 255}H├ùW ├ù3
+After normalization: Xnorm Γêê[0, 1]3├ùH├ùW
+or: Xnorm Γêê[ΓêÆ1, 1]3├ùH├ùW
+Lesson
+Preprocessing changes the numerical representation while preserving the underlying
+information as much as possible.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+22 / 37
+
+Example: Representing an Image
+Image File
+JPEG / PNG
+224 ├ù 224
+Pixels
+H ├ù W ├ù C
+224 ├ù 224 ├ù 3
+Tensor
+B ├ù C ├ù H ├ù W
+32 ├ù 3 ├ù 224 ├ù 224
+CNN Features
+B ├ù CΓÇ▓ ├ù HΓÇ▓ ├ù W ΓÇ▓
+learned representation
+What does each dimension mean?
+B = batch,
+C = channels,
+H = height,
+W = width
+Key Idea
+An image is not ΓÇ£a pictureΓÇ¥ to the neural network. It is a structured tensor of numerical
+values.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+23 / 37
+
+Example: How an Image Becomes Model Input
+1. Image File
+JPEG / PNG
+224 ├ù 224
+2. Pixels
+H ├ù W ├ù C
+224 ├ù 224 ├ù 3
+3. Input Tensor
+B ├ù C ├ù H ├ù W
+32 ├ù 3 ├ù 224 ├ù 224
+4. Learned Features
+B ├ù CΓÇ▓ ├ù HΓÇ▓ ├ù W ΓÇ▓
+e.g. 32 ├ù 512 ├ù 7 ├ù 7
+A Pixel is a Vector
+For an RGB image:
+Ii,j = [Ri,j, Gi,j, Bi,j]
+Example:
+[120, 85, 200] ΓåÆ[0.47, 0.33, 0.78]
+Tensor Dimensions
+B = batch,
+C = channels
+H = height,
+W = width
+PyTorch:
+B ├ù C ├ù H ├ù W
+Key Idea
+A neural network does not receive ΓÇ£a picture.ΓÇ¥ It receives a structured tensor of numerical
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+24 / 37
+
+Representation Transformations
+1. Raw Data
+CSV / Image / Text
+files, records, pixels, words
+2. Prepare
+Clean ΓåÆEncode ΓåÆNormalize
+numerical values
+3. Represent
+Vector ΓåÆMatrix ΓåÆTensor
+shape + semantics
+Learned Features
+CNN / MLP / Transformer
+task-specific representation
+Model
+Learn parameters
+discover patterns
+Prediction
+Class / Score / Decision
+intelligent output
+Key Idea
+Representation is not a single preprocessing operation. It evolves from raw data to model
+inputs and finally to learned features.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+25 / 37
+
+Common Representation Errors
+Wrong shape (32, 224, 224, 3)
+vs.
+(32, 3, 224, 224)
+Wrong dtype: Integer data passed where floating-point input is expected.
+Wrong value range [0, 255]
+vs.
+[0, 1]
+vs.
+[ΓêÆ1, 1]
+Wrong categorical encoding
+Treating categories as meaningful numerical quantities.
+Missing values
+NaN, empty strings, zeros, or sentinel values interpreted incorrectly.
+Data leakage
+Information from validation/test data enters preprocessing or training.
+Inconsistent preprocessing
+Training and inference use different transformations.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+26 / 37
+
+Representation Contract
+Every ML project should explicitly document its input representation.
+Property
+Question
+Data source
+Where did the data come from?
+File format
+CSV, JPEG, JSON, TXT, ...?
+Samples
+How many observations?
+Features
+What does each feature mean?
+Shape
+What is the tensor shape?
+Dtype
+How are values stored?
+Range
+What values are valid?
+Encoding
+How are categorical/text values encoded?
+Normalization
+How are numerical values scaled?
+Missing values
+How are missing observations handled?
+Split
+How are train/validation/test sets created?
+Model input
+What exact tensor does the model receive?
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+27 / 37
+
+Example: Three Data Modalities
+Tabular Data
+CSV / Excel
+N ├ù d
+Rows = samples
+Γåô
+B ├ù d
+Model input
+Γåô
+MLP
+Image
+JPEG / PNG
+H ├ù W ├ù 3
+Pixels
+Γåô
+B ├ù 3 ├ù H ├ù W
+Model input
+Γåô
+CNN
+Text
+TXT / JSON
+B ├ù T
+Token IDs
+Γåô
+B ├ù T ├ù d
+Embeddings
+Γåô
+Transformer
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+28 / 37
+
+Example: Three Data Modalities (cont)
+Key Idea
+Different modalities have different structures, but intelligent systems convert them into
+numerical representations with explicit shapes.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+29 / 37
+
+Representation in Python
+# Tabular data
+X.shape
+# (1000, 20)
+# Image batch
+images.shape
+# (32, 3, 224, 224)
+# Text token IDs
+input_ids.shape
+# (32, 128)
+# Text embeddings
+embeddings.shape
+# (32, 128, 768)
+Developer Habit - Before training,
+inspect
+shape
+dtype
+min/max
+mean/std
+Key Idea
+The shape tells you how the data is organized; the dtype and numerical range tell you how it
+is stored.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+30 / 37
+
+From Data Representation to Intelligent System
+Data
+Understand
+Data
+Preprocess
+Represent
+Vector / Matrix / Tensor
+Learn
+ML Model
+Evaluate
+Deploy
+Service
+Engineering Principle
+A successful intelligent system requires both a good model and a correct data representation
+pipeline.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+31 / 37
+
+Assignment 02: From Raw Data to a Deployable ML System
+ΓÇ£A model is only as reliable as the data and evaluation process
+behind it.ΓÇ¥
+Raw Data
+Understand
+Data
+Preprocess
+Represent
+ML
+Learning
+Evaluate
+Persist
+Deploy
+Service
+Main Objective
+Develop a reproducible machine-learning pipeline and turn it into a simple deployable
+intelligent service.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+32 / 37
+
+Assignment 02: Required Deliverables
+Each student/team must provide:
+1 Dataset description
+Source, size, attributes, data types, and target variable.
+2 Data representation
+Explain the vector/matrix/tensor representation used by the model.
+3 Preprocessing pipeline
+Cleaning, encoding, normalization, resizing, tokenization, etc.
+4 Train/validation/test strategy
+Explain the split and prevent data leakage.
+5 ML model and Evaluation
+Train at least one appropriate baseline model.
+Report appropriate metrics and analyze the results.
+6 Persistence and Deployment
+Save the trained model and preprocessing configuration.
+Provide a simple API, web interface, or application endpoint.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+33 / 37
+
+Assignment 02: Representation Checklist
+Before training, students should be able to answer:
+1 What is the original data format?
+2 What does one sample look like?
+3 What is the input feature representation?
+4 What are the dimensions of the input?
+5 What does each dimension mean?
+6 What is the data type?
+7 What is the numerical range?
+8 How are categorical or textual values encoded?
+9 How are missing values handled?
+10 What preprocessing is applied?
+11 Is the same preprocessing used during inference?
+12 What exact tensor enters the model?
+Minimum requirement
+Students must be able to print and explain the shape and dtype of the data entering their
+model
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+34 / 37
+
+Assignment 02: Example End-to-End Pipeline
+Dataset
+CSV / Image / Text
+Load
+data
+Inspect
+shape / dtype
+Preprocess
+clean / encode
+Represent
+tensor
+Train
+model
+Evaluate
+test data
+Deploy
+API / UI
+Final Goal
+The assignment is not simply ΓÇ£train a model.ΓÇ¥
+It is to build a small, reproducible, and deployable intelligent system.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+35 / 37
+
+Key Takeaways
+1 Data comes in many forms: tabular, image, text, audio, video, time series, and graphs.
+2 A file format is a storage mechanism, not a learning representation.
+3 Numerical data can be organized as scalars, vectors, matrices, and tensors.
+4 Different modalities produce different tensor shapes.
+5 Shape alone is insufficient: semantics, dtype, range, ordering, and preprocessing also
+matter.
+6 Correct representation is essential for correct model training and inference.
+7 Data representation must be reproducible from training through deployment.
+Good Data + Good Representation + Good Evaluation ΓåÆReliable Intelligent System
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+36 / 37
+
+Next Step
+From Data Representation
+to Model Development
+Data ΓåÆRepresentation ΓåÆModel ΓåÆEvaluation ΓåÆDeployment
+Assignment 02
+Build the complete pipeline from raw data to a deployable intelligent
+service.
+Dinh Que Tran, Ph.D., Assoc. Prof.
+(Department of Information Technology Posts and Telecommunications Institute of Technology (PTIT) [2mm] quetd@ptit.edu.vn
+Intelligent System Development
+2026
+37 / 37
+

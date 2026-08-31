@@ -1,0 +1,8 @@
+{
+  "dataset_name": "Shopee Vietnamese Product Reviews Sentiment",
+  "kaggle_url": "https://www.kaggle.com/datasets/duongnguyen/shopee-vietnamese-product-reviews-sentiment",
+  "selected_model": "Máy vector hỗ trợ tuyến tính (Linear SVM)",
+  "tfidf_max_features": 10000,
+  "representation": "TF-IDF: R^(N x 10000)",
+  "test_f1": 0.9242
+}

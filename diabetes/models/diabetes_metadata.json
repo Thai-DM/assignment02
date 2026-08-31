@@ -1,0 +1,33 @@
+{
+  "dataset_name": "Diabetes Health Indicators (BRFSS 2015)",
+  "kaggle_url": "https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset",
+  "feature_names": [
+    "HighBP",
+    "HighChol",
+    "CholCheck",
+    "BMI",
+    "Smoker",
+    "Stroke",
+    "HeartDiseaseorAttack",
+    "PhysActivity",
+    "Fruits",
+    "Veggies",
+    "HvyAlcoholConsump",
+    "AnyHealthcare",
+    "NoDocbcCost",
+    "GenHlth",
+    "MentHlth",
+    "PhysHlth",
+    "DiffWalk",
+    "Sex",
+    "Age",
+    "Education",
+    "Income"
+  ],
+  "target": "Diabetes_binary",
+  "selected_model": "Cây quyết định (Decision Tree)",
+  "test_accuracy": 0.7375,
+  "test_f1": 0.7567,
+  "test_recall": 0.803,
+  "representation": "R^(N x 21)"
+}

@@ -1,0 +1,1580 @@
+﻿POSTS AND TELECOMMUNICATIONS INSTITUTE OF
+TECHNOLOGY
+Intelligent System Development
+Assignment 02
+From Data Representation to a Deployable Intelligent System
+ΓÇ£A model is only as reliable as the data and evaluation process behind it.ΓÇ¥
+Three required applications
+1. Diabetes prediction
+2. House-price prediction
+3. E-commerce customer-interest discovery
+Dinh Que Tran, Ph.D., Assoc. Prof.
+Department of Information Technology
+Posts and Telecommunications Institute of Technology (PTIT)
+Email: quetd@ptit.edu.vn, tdque@yahoo.com
+2026
+
+1
+Assignment Overview
+Submit: Before 11:30PM, 07/08/2026
+Prerequisite: Lecture 02 ΓÇö Data Representation.
+The purpose of Assignment 02 is to move from the representation of data to the development of
+complete intelligent applications. Students must develop three applications using real datasets
+obtained from Kaggle:
+1. Diabetes prediction;
+2. House-price prediction;
+3. E-commerce customer behavior and interest discovery.
+The three applications must demonstrate that different forms of real-world data require appro-
+priate computational representations.
+The overall pipeline is:
+Raw Data ΓåÆUnderstand ΓåÆClean ΓåÆRepresent ΓåÆLearn ΓåÆEvaluate ΓåÆPersist ΓåÆDeploy
+The assignment therefore does not mean simply training three models.
+Students must demonstrate how data becomes a numerical representation that can be processed
+by a machine-learning model.
+2
+Connection with Lecture 02 ΓÇö Data Representation
+Lecture 02 introduced the principle:
+Real-world data ΓåÆnumerical representation ΓåÆcomputational model
+Students must explicitly identify the representation used in each application.
+Application
+Raw data
+Computational repre-
+sentation
+Diabetes
+CSV / tabular
+Feature vector and fea-
+ture matrix
+House price
+CSV / tabular
+Feature vector and fea-
+ture matrix
+E-commerce
+be-
+havior
+CSV
++
+customer
+comments/reviews
+Tabular feature vectors
++ text token/embedding
+representations
+For tabular data:
+x = [x1, x2, . . . , xd]T ΓêêRd
+and a dataset becomes a matrix:
+X ΓêêRN├ùd.
+For text, students should recognize the transformation:
+Text ΓåÆTokens ΓåÆToken IDs ΓåÆEmbeddings.
+For a batch of text embeddings:
+1
+
+E ΓêêRB├ùT├ùd.
+Important: Students must explain the representation of their data before training the model.
+Showing only the model architecture is not sufficient.
+3
+Three Required Applications
+Each student/team must develop all three applications.
+3.1
+Application 1 ΓÇö Diabetes Prediction
+Select an appropriate diabetes-related Kaggle dataset.
+The application should predict whether a patient belongs to a diabetes-related target class.
+Typical input features may include:
+ΓÇó age;
+ΓÇó BMI;
+ΓÇó blood pressure;
+ΓÇó glucose-related measurements;
+ΓÇó insulin;
+ΓÇó pregnancy-related measurements;
+ΓÇó other available clinical features.
+The students must define:
+X = patient features
+and
+y = diabetes class.
+This is primarily a classification problem.
+Representation requirement
+Show at least one original CSV record, the corresponding feature vector, the complete feature
+matrix shape, and the final tensor or numerical representation supplied to the model.
+3.2
+Application 2 ΓÇö House-Price Prediction
+Select an appropriate house-price Kaggle dataset.
+The application should predict the price of a house from its characteristics.
+Possible features include:
+ΓÇó living area;
+ΓÇó number of bedrooms;
+ΓÇó number of bathrooms;
+ΓÇó location;
+2
+
+ΓÇó number of floors;
+ΓÇó year built;
+ΓÇó parking or garage information;
+ΓÇó other available property attributes.
+The students must define:
+X = house features
+and
+y = house price.
+This is primarily a regression problem.
+Representation requirement
+Students must identify numerical and categorical variables and show how they become a single
+computational feature vector.
+For example:
+x = [xarea, xbedroom, xbathroom, xlocation, . . .]T .
+3.3
+Application 3 ΓÇö E-commerce Customer Behavior
+Select an appropriate Kaggle e-commerce/customer-behavior dataset.
+The objective is to analyze customer behavior and use available customer information and,
+where possible, customer comments, reviews, feedback, or text descriptions to discover
+interests.
+The application may address questions such as:
+ΓÇó What product category is the customer interested in?
+ΓÇó What type of product is the customer likely to purchase?
+ΓÇó Can customer comments indicate product interests?
+ΓÇó Can customers be classified according to their interests?
+ΓÇó Can text feedback be used to predict customer preference?
+A possible formulation is:
+X = customer behavioral features + text representation
+and
+y = customer interest / preference / category.
+The precise target must be determined from the selected dataset.
+3
+
+Text representation requirement
+If customer comments or reviews are available, students must demonstrate the transformation:
+Comment ΓåÆTokens ΓåÆToken IDs ΓåÆVector / Embedding
+For example:
+ΓÇ£I like wireless headphonesΓÇ¥
+may become
+[t1, t2, t3, t4]
+then
+[x1, x2, x3, x4]
+and eventually an embedding representation such as
+E ΓêêRT├ùd.
+Part I ΓÇö Dataset and Problem Definition
+For each of the three applications, students must provide:
+1. Kaggle dataset name;
+2. Kaggle URL;
+3. number of observations;
+4. number of attributes;
+5. feature names;
+6. data types;
+7. target variable;
+8. description of one observation;
+9. application objective.
+Students should include a compact table:
+Application
+Rows
+Features
+Target
+Diabetes
+House price
+E-commerce
+Part II ΓÇö Data Inspection and Understanding
+For each dataset, students must perform:
+4
+
+1
+df.shape
+2
+df.head()
+3
+df.info()
+4
+df.describe()
+5
+df.isna().sum()
+6
+df.duplicated().sum()
+Students must identify:
+ΓÇó numerical columns;
+ΓÇó categorical columns;
+ΓÇó text columns;
+ΓÇó target column;
+ΓÇó missing values;
+ΓÇó duplicated records;
+ΓÇó invalid values;
+ΓÇó outliers;
+ΓÇó class imbalance where applicable.
+Students must explain the results.
+Part III ΓÇö Data Cleaning
+For each application, students must document the cleaning procedure.
+The procedure may include:
+1. removing or correcting duplicates;
+2. handling missing values;
+3. handling invalid values;
+4. detecting outliers;
+5. correcting data types;
+6. removing irrelevant columns;
+7. handling inconsistent categorical values;
+8. cleaning text comments.
+For text data, cleaning may include:
+ΓÇó removing unnecessary whitespace;
+ΓÇó handling missing comments;
+ΓÇó normalizing text;
+ΓÇó handling punctuation where appropriate;
+ΓÇó tokenization.
+Students must explain WHY each operation is performed.
+5
+
+Part IV ΓÇö Data Representation
+This is the central connection to Lecture 02.
+For each application, students must explicitly show:
+Raw representation ΓåÆClean representation ΓåÆNumerical representation ΓåÆModel input
+3.4
+Tabular representation
+For diabetes and house-price data, students should show:
+xi = [xi1, xi2, . . . , xid]
+and
+X =
+∩ú«
+∩ú»∩ú»∩ú»∩ú»∩ú░
+xT
+1
+xT
+2...
+xT
+N
+∩ú╣
+∩ú║∩ú║∩ú║∩ú║∩ú╗
+ΓêêRN├ùd.
+Students must report:
+ΓÇó original dataframe shape;
+ΓÇó feature matrix shape;
+ΓÇó data type;
+ΓÇó feature encoding;
+ΓÇó normalization/scaling;
+ΓÇó final model-input shape.
+3.5
+Categorical representation
+For categorical variables, explain how values such as
+{Urban, Suburban, Rural}
+become numerical representations.
+For example, one-hot encoding:
+Urban ΓåÆ[1, 0, 0].
+3.6
+Text representation
+For customer comments:
+raw comment ΓåÆtokens ΓåÆIDs ΓåÆembeddings.
+Students must report:
+B,
+T,
+d
+and the final representation:
+E ΓêêRB├ùT├ùd.
+6
+
+Representation is part of the ML solution.
+Students receive marks not only for obtaining good accuracy, but also for correctly explaining
+how raw data becomes a computational representation.
+Part V ΓÇö Exploratory Data Analysis
+For every application, students must include meaningful visualizations. At minimum:
+1. target distribution;
+2. important feature distributions;
+3. relationships between features and target;
+4. correlation analysis where appropriate.
+For e-commerce data, additionally analyze:
+ΓÇó customer purchase behavior;
+ΓÇó product categories;
+ΓÇó frequency of interests;
+ΓÇó comment/review characteristics;
+ΓÇó frequent terms or keywords where appropriate.
+For every major visualization students must provide:
+Observation: What does the figure show?
+Interpretation: What does it mean?
+ML implication: Why does it matter?
+Part VI ΓÇö Train, Validation, and Test Data
+Students should use:
+D = Dtrain Γê¬Dvalidation Γê¬Dtest
+with the sets kept independent.
+A recommended split is:
+70%/15%/15%.
+Alternatively:
+80%/20%
+may be used when justified.
+For classification, stratification should be considered.
+Students must explain why test data must not influence model training or preprocessing fitting.
+7
+
+Part VII ΓÇö Model Development
+Students must develop suitable ML models for each application.
+3.7
+Diabetes
+This is a classification task.
+Recommended models:
+ΓÇó Logistic Regression;
+ΓÇó Decision Tree;
+ΓÇó Random Forest;
+ΓÇó Support Vector Machine;
+ΓÇó KNN.
+Five models must be compared.
+3.8
+House Price
+This is a regression task.
+Recommended models:
+ΓÇó Linear Regression;
+ΓÇó Ridge/Lasso Regression;
+ΓÇó Decision Tree Regressor;
+ΓÇó Random Forest Regressor;
+ΓÇó Gradient Boosting Regressor.
+Five models must be compared.
+3.9
+E-commerce Customer Behavior
+Students may formulate the task as classification or prediction depending on the selected dataset.
+Six models must be compared.
+ΓÇó Logistic Regression;
+ΓÇó Decision Tree;
+ΓÇó Random Forest;
+ΓÇó SVM;
+ΓÇó text-based linear classifier;
+ΓÇó another justified model.
+Students should compare a tabular-only representation with a representation that incor-
+porates customer comments when the dataset supports this.
+8
+
+Part VIII ΓÇö Model Evaluation
+Classification
+For diabetes and classification-based e-commerce prediction, report:
+ΓÇó Accuracy;
+ΓÇó Precision;
+ΓÇó Recall;
+ΓÇó F1-score;
+ΓÇó confusion matrix;
+ΓÇó ROC-AUC where appropriate.
+The confusion matrix should be interpreted rather than simply displayed.
+Regression
+For house-price prediction, report:
+ΓÇó MAE;
+ΓÇó MSE;
+ΓÇó RMSE;
+ΓÇó R2.
+For example:
+MAE = 1
+N
+N
+X
+i=1
+|yi ΓêÆ╦åyi|.
+RMSE =
+v
+u
+u
+t 1
+N
+N
+X
+i=1
+(yi ΓêÆ╦åyi)2.
+Students must explain what each metric means in the application.
+Part IX ΓÇö Model Comparison
+Students must create a comparison table for each application.
+For classification:
+Model
+Accuracy
+Precision
+Recall
+F1
+Model 1
+Model 2
+Model 3
+Model 4
+For regression:
+9
+
+Model
+MAE
+MSE
+RMSE
+R2
+Model 1
+Model 2
+Model 3
+Model 4
+Students must justify the selected final model.
+Part X ΓÇö Model Persistence
+The final model must be saved so that it can be reused without retraining. For example:
+1
+import joblib
+2
+3
+joblib.dump(
+4
+pipeline,
+5
+"model_pipeline.joblib"
+6
+)
+Students must save:
+ΓÇó preprocessing;
+ΓÇó feature transformation;
+ΓÇó trained model;
+ΓÇó model configuration where necessary.
+The deployed service must use exactly the same preprocessing logic as the model used during
+training.
+Part XI ΓÇö Web Deployment
+Each application must be deployed as a simple web service. Students may use:
+ΓÇó FastAPI;
+ΓÇó Flask;
+ΓÇó or another justified REST framework.
+The service should provide an endpoint such as:
+1
+POST /predict
+The client sends the required features and receives:
+1
+{
+2
+"prediction": "...",
+3
+"confidence": 0.91
+4
+}
+For house-price prediction:
+1
+{
+2
+"predicted_price": 285000
+3
+}
+10
+
+For e-commerce interest discovery:
+1
+{
+2
+"interest": "electronics",
+3
+"confidence": 0.87
+4
+}
+Students must demonstrate the API using a browser, Swagger UI, Postman, or another client.
+Part XII ΓÇö Mobile Deployment
+Each application must also be demonstrated through a simple mobile interface.
+The mobile application does not necessarily need to run the ML model directly on the device.
+A recommended architecture is:
+Mobile UI ΓåÆREST API ΓåÆPreprocessing ΓåÆML Model ΓåÆPrediction ΓåÆMobile UI
+The mobile interface should allow the user to:
+1. enter or select input information;
+2. submit a prediction request;
+3. display the prediction;
+4. display an appropriate explanation or confidence value.
+Students may implement the mobile client using an appropriate framework such as Android/Kotlin,
+Flutter, React Native, or another approved technology.
+Complete Intelligent-System Architecture
+The final system should demonstrate the complete path:
+Real Data
+Clean
+Data
+Represent
+Vector / Matrix / Tensor
+ML
+Model
+Evaluate
+Persist
+Model
+Web API
+Mobile
+App
+The architecture must be demonstrated for all three applications.
+Required Deliverables
+Each student must submit:
+1. Three Jupyter notebooks:
+ΓÇó diabetes;
+ΓÇó house price;
+ΓÇó e-commerce customer behavior.
+11
+
+2. Three trained and persisted ML pipelines.
+3. Three web prediction services.
+4. Three mobile demonstrations.
+5. A final report.
+6. Source code.
+7. Dataset references.
+8. README explaining how to reproduce the systems.
+Report Structure
+The report should contain approximately 10 pages.
+1. Introduction and objectives
+2. Data sources and application definitions
+3. Data understanding and data quality
+4. Data representation
+5. Preprocessing and exploratory analysis
+6. Model development
+7. Evaluation and model comparison
+8. Web and mobile deployment
+9. Discussion
+10. Conclusion
+The three applications should be discussed using the same development framework so that
+their differences can be compared.
+Mandatory Data-Representation Summary
+The final report must include the following table:
+Application
+Raw form
+Numerical repre-
+sentation
+Model input
+Diabetes
+CSV / table
+Feature
+vector
+/
+matrix
+B ├ù d
+House price
+CSV / table
+Encoded
+feature
+matrix
+B ├ù d
+E-commerce
+CSV + comments
+Tabular features +
+text
+vectors/em-
+beddings
+B ├ù d and/or B ├ù
+T ├ù d
+Students must explain every dimension in the reported shapes.
+12
+
+Discussion Questions
+For each application, answer:
+1. What does one observation represent?
+2. What is the raw data representation?
+3. What is the final numerical representation?
+4. What do the dimensions of the feature matrix mean?
+5. Which features required encoding?
+6. Which features required normalization?
+7. What information was lost during representation?
+8. What information was preserved?
+9. What preprocessing could cause data leakage?
+10. Which model performed best?
+11. Why was that model selected?
+12. Which evaluation metric is most important?
+13. How is the model persisted?
+14. How does the Web service use the persisted model?
+15. How does the mobile application communicate with the prediction service?
+For the e-commerce application, additionally answer:
+1. What information is contained in customer comments?
+2. How are comments transformed into numerical data?
+3. What do token IDs represent?
+4. What do embedding vectors represent?
+5. Which customer interests can be discovered?
+6. Does text improve prediction compared with tabular features alone?
+Assessment Rubric
+Component
+Weight
+Key evidence
+Problem understanding
+10%
+Clear application and target
+Data quality
+10%
+Missing, duplicate, invalid data
+Data representation
+15%
+Vector/matrix/tensor explanation
+EDA
+10%
+Meaningful visualization
+Preprocessing
+10%
+Reproducible pipeline
+ML models
+15%
+Multiple models and comparison
+Evaluation
+10%
+Correct metrics and interpretation
+Web deployment
+7.5%
+Working prediction API
+Mobile deployment
+7.5%
+Working mobile interface
+Discussion and reproducibility
+5%
+Technical explanation and README
+13
+
+Final Requirement
+The assignment is considered complete only when students can demonstrate all three systems:
+Diabetes Prediction
+Γåô
+House-Price Prediction
+Γåô
+E-commerce Interest Discovery
+and for each system:
+Data ΓåÆClean ΓåÆRepresent ΓåÆTrain ΓåÆEvaluate ΓåÆPersist ΓåÆWeb ΓåÆMobile
+The central learning objective is:
+Students should understand not only how to train an ML model, but how raw
+real-world data is transformed into a reliable computational representation and
+ultimately into a usable intelligent service.
+4
+Required Report Structure
+Each student must develop three intelligent applications using three different Kaggle datasets:
+1. Diabetes Prediction
+2. House Price Prediction
+3. E-Commerce Customer Behavior / Interest Discovery
+The three applications must demonstrate how different types of real-world data are transformed
+into computational representations and then used by machine-learning models.
+The same development framework must be followed for all three applications:
+Data ΓåÆUnderstand ΓåÆClean ΓåÆRepresent ΓåÆLearn ΓåÆEvaluate ΓåÆPersist ΓåÆDeploy
+The final submission consists of:
+ΓÇó one technical report;
+ΓÇó one Jupyter Notebook for each application;
+ΓÇó trained model files;
+ΓÇó preprocessing pipeline;
+ΓÇó deployment source code;
+ΓÇó screenshots demonstrating the web service;
+ΓÇó screenshots demonstrating the mobile application;
+ΓÇó source code repository.
+14
+
+5
+Report Template
+The report should contain approximately 10 pages, excluding source code and appendices.
+Students should use the following structure.
+Cover Page
+INTELLIGENT SYSTEM DEVELOPMENT
+ASSIGNMENT 02
+From Data Representation to Deployable Intelligent Systems
+Student name:
+................................................
+Student ID:
+................................................
+Class:
+................................................
+Team:
+................................................
+Lecturer:
+Dinh Que Tran, Ph.D., Assoc. Prof.
+Semester:
+I.2026
+6
+Executive Summary
+Provide a short summary of the three intelligent applications.
+Application
+Prediction / Task
+Main Representa-
+tion
+Diabetes
+Diabetes
+classifica-
+tion
+Feature vector / ma-
+trix
+House Price
+Price regression
+Feature vector / ma-
+trix
+Customer Behav-
+ior
+Behavior / interest
+prediction
+Feature vector / ma-
+trix
+For each application, briefly state:
+ΓÇó dataset;
+ΓÇó problem;
+ΓÇó representation;
+ΓÇó selected model;
+ΓÇó main evaluation result;
+ΓÇó deployment method.
+7
+Connection to Lecture 02: Data Representation
+Explain how real-world data becomes numerical data.
+Students must explicitly identify:
+Real-world object ΓåÆRaw data ΓåÆNumerical representation ΓåÆTensor
+For example:
+15
+
+Application
+Raw Data
+ML Representation
+Diabetes
+CSV
+feature matrix
+House Price
+CSV
+feature matrix
+Customer Behavior
+CSV / transactions
+feature matrix / sequences
+For every application, students must answer:
+1. What does one row represent?
+2. What does one column represent?
+3. Which columns are input features?
+4. Which column is the target?
+5. Which features are numerical?
+6. Which features are categorical?
+7. How are categorical values encoded?
+8. What is the final feature dimension?
+9. What is the shape of the model input?
+8
+Application 1 ΓÇö Diabetes Prediction
+8.1
+Problem Description
+Describe the healthcare problem.
+Template:
+The objective of this application is to predict whether a patient is likely to have diabetes
+based on .................................... The prediction target is .................................... The
+prediction can potentially support ....................................
+Students must clearly define:
+X = patient features
+y = diabetes class.
+8.2
+Kaggle Dataset
+Provide:
+ΓÇó dataset name;
+ΓÇó Kaggle URL;
+ΓÇó number of observations;
+ΓÇó number of features;
+ΓÇó target variable;
+ΓÇó feature descriptions.
+16
+
+Feature
+Type
+Meaning
+Age
+Numerical
+................................
+BMI
+Numerical
+................................
+Glucose
+Numerical
+................................
+................................
+................................
+................................
+8.3
+Data Understanding
+Report:
+ΓÇó dataset shape;
+ΓÇó data types;
+ΓÇó missing values;
+ΓÇó duplicated records;
+ΓÇó invalid values;
+ΓÇó class distribution.
+Include screenshots or tables from the notebook.
+8.4
+Data Cleaning
+Explain:
+ΓÇó missing-value treatment;
+ΓÇó duplicate removal;
+ΓÇó invalid-value treatment;
+ΓÇó outlier analysis;
+ΓÇó categorical-value processing.
+Do not only state what was done.
+Explain why it was done.
+8.5
+Data Representation
+Show the transformation:
+CSV ΓåÆDataFrame ΓåÆclean feature matrix ΓåÆscaled/encoded matrix ΓåÆmodel input.
+Report:
+X ΓêêRN├ùd.
+Example:
+X =
+∩ú«
+∩ú»∩ú»∩ú»∩ú»∩ú░
+x11
+x12
+┬╖ ┬╖ ┬╖
+x1d
+x21
+x22
+┬╖ ┬╖ ┬╖
+x2d
+...
+...
+...
+...
+xN1
+xN2
+┬╖ ┬╖ ┬╖
+xNd
+∩ú╣
+∩ú║∩ú║∩ú║∩ú║∩ú╗
+.
+State the actual values of N and d for the selected dataset.
+17
+
+8.6
+Exploratory Data Analysis
+Include at least:
+ΓÇó target distribution;
+ΓÇó feature distributions;
+ΓÇó important feature relationships;
+ΓÇó correlation analysis;
+ΓÇó at least three meaningful plots.
+For every important plot:
+Observation: What do you see?
+Interpretation: What does it mean?
+ML implication: Why is it relevant?
+8.7
+Model Development
+Train at least four models.
+Recommended:
+ΓÇó Logistic Regression;
+ΓÇó KNN;
+ΓÇó Decision Tree;
+ΓÇó Random Forest;
+ΓÇó SVM.
+8.8
+Evaluation
+Report:
+ΓÇó Accuracy;
+ΓÇó Precision;
+ΓÇó Recall;
+ΓÇó F1-score;
+ΓÇó ROC-AUC where appropriate;
+ΓÇó confusion matrix.
+Explain which metric is most important for diabetes prediction.
+18
+
+8.9
+Model Selection
+Explain:
+Which model would you select for deployment and why?
+Consider:
+ΓÇó predictive performance;
+ΓÇó interpretability;
+ΓÇó computational cost;
+ΓÇó robustness;
+ΓÇó deployment constraints.
+8.10
+Deployment
+Deploy the selected model as:
+Web Service + Mobile Application
+The web application should provide:
+Input patient information
+|
+v
+Preprocessing
+|
+v
+ML Model
+|
+v
+Prediction
+The mobile application should provide a simple user interface for entering the same features
+and displaying the prediction.
+Include screenshots.
+9
+Application 2 ΓÇö House Price Prediction
+9.1
+Problem Description
+Describe the problem of predicting house prices.
+Define:
+X = house characteristics
+and
+y = house price.
+This application is a regression problem.
+Students must explain why it is different from diabetes classification.
+19
+
+9.2
+Dataset
+Provide:
+ΓÇó Kaggle dataset name and URL;
+ΓÇó number of observations;
+ΓÇó number of features;
+ΓÇó target variable;
+ΓÇó numerical features;
+ΓÇó categorical features.
+9.3
+Data Understanding and Cleaning
+Analyze:
+ΓÇó missing values;
+ΓÇó duplicates;
+ΓÇó invalid values;
+ΓÇó outliers;
+ΓÇó skewed numerical variables;
+ΓÇó categorical variables.
+9.4
+Representation
+Show:
+Raw CSV ΓåÆDataFrame ΓåÆClean Data ΓåÆEncoded/Scaled Features ΓåÆX.
+Report:
+X ΓêêRN├ùd,
+y ΓêêRN.
+9.5
+Exploratory Data Analysis
+At minimum include:
+ΓÇó house-price distribution;
+ΓÇó relationship between important features and price;
+ΓÇó correlation analysis;
+ΓÇó relevant scatter plots;
+ΓÇó analysis of possible outliers.
+20
+
+9.6
+Regression Models
+Train at least four models, for example:
+ΓÇó Linear Regression;
+ΓÇó Ridge Regression;
+ΓÇó Decision Tree Regressor;
+ΓÇó Random Forest Regressor;
+ΓÇó Gradient Boosting Regressor.
+9.7
+Evaluation
+Report appropriate regression metrics:
+MAE = 1
+N
+N
+X
+i=1
+|yi ΓêÆ╦åyi|
+MSE = 1
+N
+N
+X
+i=1
+(yi ΓêÆ╦åyi)2
+RMSE =
+ΓêÜ
+MSE.
+Also report R2.
+Model
+MAE
+RMSE
+R2
+Training Time
+Linear Regression
+Ridge
+Decision Tree
+Random Forest
+9.8
+Deployment
+Deploy the selected house-price model on:
+ΓÇó a web interface;
+ΓÇó a mobile interface.
+The user enters house characteristics and receives:
+Predicted House Price
+10
+Application 3 ΓÇö E-Commerce Customer Behavior and Inter-
+est
+10.1
+Problem Description
+The objective is to analyze customer behavior and discover customer interests from e-commerce
+data.
+Students must define a specific supervised-learning task.
+Possible tasks include:
+21
+
+ΓÇó predict whether a customer will purchase;
+ΓÇó predict whether a customer will return;
+ΓÇó predict customer segment;
+ΓÇó predict product-category interest;
+ΓÇó predict high-value customer behavior.
+Students must select one clearly defined target.
+The problem should be written as:
+X = customer behavioral features
+y = behavior / interest target.
+10.2
+Dataset
+Provide:
+ΓÇó Kaggle dataset name and URL;
+ΓÇó number of customers/transactions;
+ΓÇó feature descriptions;
+ΓÇó target definition.
+10.3
+Customer Representation
+Students should explicitly explain how a customerΓÇÖs behavior is converted into numerical features.
+For example:
+xi = [age, frequency, monetary value, sessions, cart actions, category counts, . . .]T .
+If transaction-level data are used, students should explain how multiple transactions are ag-
+gregated into a customer-level representation.
+For example:
+Transactions ΓåÆCustomer Profile ΓåÆFeature Vector.
+10.4
+Data Cleaning
+Investigate:
+ΓÇó missing customer information;
+ΓÇó duplicate transactions;
+ΓÇó invalid transactions;
+ΓÇó impossible prices or quantities;
+ΓÇó inconsistent categories;
+ΓÇó extreme purchasing behavior.
+22
+
+10.5
+Interest Discovery
+Students must identify important behavioral patterns.
+Examples:
+ΓÇó frequently purchased categories;
+ΓÇó purchase frequency;
+ΓÇó average order value;
+ΓÇó recency;
+ΓÇó browsing behavior;
+ΓÇó cart behavior;
+ΓÇó customer activity.
+A simple customer representation may be:
+xi = [Ri, Fi, Mi, Ci1, Ci2, . . . , Cik].
+where:
+ΓÇó Ri = recency;
+ΓÇó Fi = purchase frequency;
+ΓÇó Mi = monetary value;
+ΓÇó Cij = activity related to category j.
+10.6
+Model Development
+Train at least four suitable models.
+For a classification task:
+ΓÇó Logistic Regression;
+ΓÇó Decision Tree;
+ΓÇó Random Forest;
+ΓÇó SVM or KNN.
+10.7
+Evaluation
+Report appropriate metrics:
+ΓÇó Accuracy;
+ΓÇó Precision;
+ΓÇó Recall;
+ΓÇó F1;
+ΓÇó ROC-AUC where appropriate;
+ΓÇó confusion matrix.
+23
+
+10.8
+Business Interpretation
+Students must answer:
+What customer behavior or interest has been discovered, and how could an e-commerce
+company use the prediction?
+Possible applications include:
+ΓÇó personalized recommendations;
+ΓÇó targeted promotions;
+ΓÇó customer retention;
+ΓÇó product recommendations;
+ΓÇó marketing campaigns.
+10.9
+Deployment
+Deploy the selected customer-behavior model as:
+Web Application + Mobile Application
+The system should accept customer information and return a predicted behavior or interest.
+11
+Comparison of the Three Intelligent Systems
+Students must provide one integrated comparison.
+Diabetes
+House Price
+Customer
+Behavior
+Problem type
+Classification
+Regression
+Classification /
+selected task
+Raw data
+Observation
+Patient
+House
+Customer
+/
+transaction
+Input shape
+Target
+Representation
+Feature vector
+Feature vector
+Behavior vector
+Best model
+Main metric
+Web deployment
+Yes
+Yes
+Yes
+Mobile
+deploy-
+ment
+Yes
+Yes
+Yes
+Students must discuss:
+1. How are the three datasets different?
+2. How are their representations different?
+3. Which preprocessing operations are common?
+4. Which preprocessing operations are application-specific?
+5. Why is the target representation different?
+24
+
+6. Why are different evaluation metrics required?
+7. Which system is easiest to deploy?
+8. Which system is most computationally demanding?
+12
+Deployment Architecture
+All three applications must demonstrate a complete inference pipeline.
+User
+Input
+API
+Request
+Preprocessing
+Saved
+ML Model
+Prediction
+The deployment system should contain:
+1. trained model;
+2. preprocessing pipeline;
+3. API endpoint;
+4. input validation;
+5. prediction function;
+6. result returned to the client;
+7. web user interface;
+8. mobile user interface.
+Students must explain why the same preprocessing used during training must also be used
+during inference.
+13
+Web Application
+Each of the three applications must be exposed through a working web application.
+The web application is not required to retrain the model. It must load the saved model and
+preprocessing pipeline and perform inference on new user input.
+Students may use:
+ΓÇó FastAPI;
+ΓÇó Flask;
+ΓÇó Streamlit;
+ΓÇó another approved web framework.
+25
+
+13.1
+Required Web Workflow
+The web application should implement the following process:
+User Input ΓåÆValidation ΓåÆPreprocessing ΓåÆSaved Model ΓåÆPrediction ΓåÆResult
+The application should contain:
+1. input form;
+2. appropriate input controls;
+3. input validation;
+4. prediction button;
+5. prediction result;
+6. confidence or probability when appropriate;
+7. brief interpretation of the result.
+13.2
+Application-Specific Input
+The input interface must correspond to the data representation developed during the ML experi-
+ment.
+Diabetes prediction: The user enters the clinical/demographic features required by the selected
+dataset. The system returns the predicted diabetes class or probability.
+House-price prediction: The user enters property characteristics such as area, number of rooms,
+location-related variables, or other features used by the selected dataset. The system returns
+the estimated house price.
+Customer behavior: The user enters or selects customer characteristics and/or behavioral fea-
+tures. The system returns the predicted customer behavior, segment, purchase intention, or
+other target defined by the selected dataset.
+13.3
+Web Application Evidence
+For each application, include at least:
+1. input screen;
+2. prediction/result screen;
+3. an example of valid input;
+4. an example of the returned prediction.
+Use the following template for each application:
+Web Application Screenshot ΓÇö [Application Name]
+Insert screenshot of the working web application here.
+Figure explanation: Briefly describe the input, prediction, and interpretation shown in the
+screenshot.
+26
+
+14
+Mobile Application
+Each of the three ML applications must also be accessible through a mobile application.
+The mobile application acts as a client of the deployed machine-learning service.
+Possible technologies include:
+ΓÇó Flutter;
+ΓÇó Android Studio;
+ΓÇó React Native;
+ΓÇó another approved mobile framework.
+The mobile application does not need to contain the complete ML training process.
+Instead, it should communicate with the deployed prediction service.
+14.1
+Mobile Architecture
+The expected architecture is:
+Mobile Application
+Γåô
+REST API
+Γåô
+Preprocessing
+Γåô
+Saved ML Model
+Γåô
+Prediction
+Γåô
+REST Response
+Γåô
+Mobile Application
+Students should clearly distinguish:
+Training╠╕ = Inference.
+The model is trained during the experimental stage and saved. The mobile application performs
+inference using the deployed model.
+14.2
+Required Mobile Functionality
+The mobile application should provide:
+1. input screen;
+2. input validation;
+3. prediction request;
+4. connection to the REST API;
+5. prediction result;
+6. confidence/probability when appropriate;
+7. user-friendly result presentation.
+27
+
+14.3
+Mobile Application Evidence
+For each application, include:
+1. mobile input screen;
+2. prediction/result screen;
+3. evidence that the application communicates with the prediction service.
+Mobile Application Screenshot ΓÇö [Application Name]
+Insert screenshot of the mobile input and prediction screens here.
+Figure explanation: Explain how the mobile application sends input to the API and
+displays the returned prediction.
+15
+Deployment and Inference
+The deployment stage connects the machine-learning experiment with a usable software system.
+For each application, students must demonstrate:
+Saved Preprocessor + Saved Model + API + Web Client + Mobile Client
+The deployed system should perform the following inference process:
+Raw User Input ΓåÆValidation ΓåÆSame Preprocessing ΓåÆModel ΓåÆPrediction.
+The preprocessing used during deployment must be the same preprocessing used during model
+training.
+Important: Data Leakage
+Students must not fit a new scaler, encoder, imputer, or other preprocessing component using
+test data or user input during deployment.
+The deployed system must load the preprocessing pipeline learned from the training data.
+16
+Reproducibility
+A major objective of Assignment 02 is to develop a reproducible machine-learning system. Another
+student should be able to reproduce the main experiment and run the deployed application.
+For each of the three applications, provide:
+ΓÇó Python version;
+ΓÇó operating system;
+ΓÇó library versions;
+ΓÇó random seed;
+ΓÇó Kaggle dataset source;
+ΓÇó dataset version or download information;
+ΓÇó preprocessing procedure;
+28
+
+ΓÇó feature representation;
+ΓÇó train/test split;
+ΓÇó model hyperparameters;
+ΓÇó evaluation metrics;
+ΓÇó saved preprocessing pipeline;
+ΓÇó saved model;
+ΓÇó API code;
+ΓÇó web application code;
+ΓÇó mobile application code.
+Example:
+1
+import numpy as np
+2
+import random
+3
+4
+RANDOM_SEED = 42
+5
+6
+np.random.seed(RANDOM_SEED)
+7
+random.seed(RANDOM_SEED)
+Students should also provide a requirements.txt or equivalent environment description.
+17
+Final Comparative Discussion
+Students must compare the three applications rather than discussing them independently only.
+The discussion should address the complete pipeline:
+Data ΓåÆRepresentation ΓåÆModel ΓåÆEvaluation ΓåÆDeployment
+Students must answer the following questions.
+1. How are the three datasets different?
+2. What does one observation represent in each dataset?
+3. What is the target variable for each application?
+4. What is the computational representation of each dataset?
+5. Which application uses classification?
+6. Which application uses regression?
+7. How are categorical variables represented?
+8. How are numerical variables represented and scaled?
+9. Which data-quality problems occurred in each dataset?
+10. Which preprocessing operations were required?
+11. Which model performed best for each application?
+29
+
+12. Which evaluation metrics were most appropriate?
+13. Did the best model have the best deployment characteristics?
+14. Which application was easiest to deploy?
+15. Which application was most difficult to deploy?
+16. What forms of data leakage were considered?
+17. What limitations remain in each system?
+18. What would you improve with additional time?
+17.1
+Cross-Application Comparison
+Students should complete the following table.
+Aspect
+Diabetes
+House Price
+Customer Behav-
+ior
+Problem type
+Observation
+Target
+Input
+representa-
+tion
+Data-quality issues
+Best model
+Main metric
+Web deployment
+Mobile deployment
+Main limitation
+18
+Conclusion
+Summarize what was learned from developing the three intelligent applications.
+The conclusion should return to the central principle of the assignment:
+Raw Data ΓåÆClean ΓåÆRepresent ΓåÆLearn ΓåÆEvaluate ΓåÆPersist ΓåÆDeploy
+Students should explain that an intelligent system is not simply a trained machine-learning
+model.
+A deployable intelligent system combines data, representation, learning,
+evaluation, software, deployment, and user interaction.
+The conclusion should contain:
+1. the main lesson learned;
+2. the most important technical challenge;
+3. the most important data-representation issue;
+4. the most important ML lesson;
+5. the most important deployment lesson;
+6. one proposed improvement for future work.
+30
+
+A
+Appendix A ΓÇö Repository Structure
+Students should organize the project approximately as follows:
+Assignment_02/
+|
++-- diabetes/
+|
++-- data/
+|
++-- notebook/
+|
++-- model/
+|
+|
++-- preprocessor.joblib
+|
+|
++-- model.joblib
+|
++-- api/
+|
++-- web/
+|
++-- mobile/
+|
++-- requirements.txt
+|
++-- house_price/
+|
++-- data/
+|
++-- notebook/
+|
++-- model/
+|
+|
++-- preprocessor.joblib
+|
+|
++-- model.joblib
+|
++-- api/
+|
++-- web/
+|
++-- mobile/
+|
++-- requirements.txt
+|
++-- customer_behavior/
+|
++-- data/
+|
++-- notebook/
+|
++-- model/
+|
+|
++-- preprocessor.joblib
+|
+|
++-- model.joblib
+|
++-- api/
+|
++-- web/
+|
++-- mobile/
+|
++-- requirements.txt
+|
++-- report/
+|
++-- Assignment_02.pdf
+|
++-- README.md
+B
+Appendix B ΓÇö Required Notebook Structure
+Every application notebook should contain the following sections:
+1. Problem definition
+2. Dataset source
+3. Dataset loading
+31
+
+4. Dataset inspection
+5. Data-quality analysis
+6. Missing-value analysis
+7. Duplicate analysis
+8. Invalid-value analysis
+9. Outlier analysis
+10. Exploratory data analysis
+11. Feature types
+12. Data representation
+13. Feature engineering
+14. Train/test split
+15. Preprocessing pipeline
+16. Baseline model
+17. Model training
+18. Model comparison
+19. Evaluation
+20. Error analysis
+21. Model selection
+22. Model persistence
+23. Inference test
+C
+Appendix C ΓÇö Required API Structure
+Each application should expose a prediction endpoint similar to:
+/predict
+The general API workflow is:
+JSON Input ΓåÆValidation ΓåÆPreprocessing ΓåÆModel ΓåÆJSON Output.
+Example conceptual response:
+{
+"prediction": "...",
+"probability": 0.91
+}
+The exact API implementation may differ depending on the application and framework.
+32
+
+D
+Appendix D ΓÇö Required Web Report Template
+For each application, report:
+1. Web framework.
+2. API endpoint.
+3. Input variables.
+4. Validation rules.
+5. Preprocessing used.
+6. Loaded model.
+7. Example request.
+8. Example response.
+9. Screenshot of input interface.
+10. Screenshot of prediction result.
+Web Application ΓÇö [Application Name]
+Framework:
+Endpoint:
+Input:
+Output:
+Insert web application screenshots here.
+E
+Appendix E ΓÇö Required Mobile Report Template
+For each application, report:
+1. Mobile framework.
+2. Platform.
+3. Input screen.
+4. API endpoint.
+5. Request format.
+6. Response format.
+7. Prediction display.
+8. Screenshots.
+Mobile Application ΓÇö [Application Name]
+Framework:
+Platform:
+API:
+Insert mobile screenshots here.
+33
+
+F
+Appendix F ΓÇö Final Submission Checklist
+Requirement
+Done
+Three Kaggle datasets selected
+Γûí
+Diabetes application completed
+Γûí
+House-price application completed
+Γûí
+Customer-behavior application completed
+Γûí
+Problem definition completed for all three
+Γûí
+Dataset structure analyzed
+Γûí
+Data quality analyzed
+Γûí
+Missing values investigated
+Γûí
+Duplicates investigated
+Γûí
+Invalid values investigated
+Γûí
+Outliers investigated
+Γûí
+Data representation explained
+Γûí
+Numerical features identified
+Γûí
+Categorical features identified
+Γûí
+Feature engineering explained
+Γûí
+EDA completed
+Γûí
+Train/test split performed correctly
+Γûí
+Data leakage considered
+Γûí
+Preprocessing pipeline implemented
+Γûí
+At least four ML models compared per application
+Γûí
+Appropriate metrics reported
+Γûí
+Confusion matrix reported where appropriate
+Γûí
+Best model selected and justified
+Γûí
+Error analysis completed
+Γûí
+Model saved
+Γûí
+Preprocessing saved
+Γûí
+Inference tested
+Γûí
+REST API implemented
+Γûí
+Web application implemented
+Γûí
+Mobile application implemented
+Γûí
+Diabetes web screenshots included
+Γûí
+Diabetes mobile screenshots included
+Γûí
+House-price web screenshots included
+Γûí
+House-price mobile screenshots included
+Γûí
+Customer-behavior web screenshots included
+Γûí
+Customer-behavior mobile screenshots included
+Γûí
+Reproducibility information included
+Γûí
+Source code submitted
+Γûí
+README included
+Γûí
+Final comparative discussion included
+Γûí
+Final PDF submitted
+Γûí
+34
+

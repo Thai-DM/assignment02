@@ -1,0 +1,32 @@
+{
+  "dataset_name": "Vietnam Housing Dataset (Hanoi)",
+  "kaggle_url": "https://www.kaggle.com/datasets/ladcva/vietnam-housing-dataset-hanoi",
+  "feature_cols_raw": [
+    "Số tầng",
+    "Số phòng ngủ",
+    "Diện tích",
+    "Dài",
+    "Rộng",
+    "Quận",
+    "Huyện",
+    "Loại hình nhà ở",
+    "Giấy tờ pháp lý"
+  ],
+  "numerical_cols": [
+    "Số tầng",
+    "Số phòng ngủ",
+    "Diện tích",
+    "Dài",
+    "Rộng"
+  ],
+  "categorical_cols": [
+    "Quận",
+    "Huyện",
+    "Loại hình nhà ở",
+    "Giấy tờ pháp lý"
+  ],
+  "selected_model": "Rừng ngẫu nhiên (Random Forest Regressor)",
+  "representation": "R^(N x 297)",
+  "test_mae": 22.65,
+  "test_r2": 0.4113
+}

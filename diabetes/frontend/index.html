@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Diabetes Diagnostic Dashboard</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- vis-network & marked.js -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <h1 class="brand-title">AI Medical Diagnostic Dashboard</h1>
+                        <p class="brand-subtitle">Hệ Thống Trợ Giúp Chẩn Đoán Tiểu Đường (BRFSS Dataset)</p>
+                    </div>
+                </div>
+                <div class="header-status">
+                    <div class="status-pill active">
+                        <span class="pulse-dot"></span>
+                        <span>API Server: Đang kết nối</span>
+                    </div>
+                    <div class="dataset-pill">
+                        <i class="fa-solid fa-database"></i>
+                        <span>21 Đặc trưng (Features)</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="dashboard-grid">
+            
+            <!-- CỘT TRÁI: NHẬP LIỆU -->
+            <div class="left-column">
+                <div class="card input-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-sliders text-primary"></i>
+                            <h2>Hồ Sơ Lâm Sàng (Input Features)</h2>
+                        </div>
+                    </div>
+
+                    <!-- Mẫu bệnh nhân (Quick Samples) -->
+                    <div class="sample-section">
+                        <label class="section-label">
+                            <i class="fa-solid fa-bolt text-warning"></i> Điền nhanh mẫu bệnh nhân:
+                        </label>
+                        <div class="sample-buttons">
+                            <button type="button" class="btn-sample" onclick="loadSample('healthy')">Thanh niên Khỏe mạnh</button>
+                            <button type="button" class="btn-sample" onclick="loadSample('high_risk')">Béo phì & Huyết áp Cao</button>
+                            <button type="button" class="btn-sample" onclick="loadSample('elderly')">Người cao tuổi, Sức khỏe Kém</button>
+                        </div>
+                    </div>
+
+                    <!-- Chọn Model -->
+                    <div class="model-section">
+                        <label class="section-label">
+                            <i class="fa-solid fa-brain text-primary"></i> Mô hình Dự đoán:
+                        </label>
+                        <div class="model-option active">
+                            <div class="model-opt-header">
+                                <span class="model-name">Decision Tree (Cây Quyết Định)</span>
+                                <span class="model-acc">Độ tin cậy: ~85%</span>
+                            </div>
+                            <p class="model-desc">Tích hợp Rules An toàn Lâm sàng (Clinical Guardrails)</p>
+                        </div>
+                    </div>
+
+                    <!-- FORM -->
+                    <form id="predict-form" class="prediction-form">
+                        
+                        <!-- Nhóm 1: Cơ bản & Thể chất -->
+                        <h3 class="form-group-title"><i class="fa-solid fa-person"></i> 1. Thể chất & Nhân khẩu học</h3>
+                        
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Giới tính (Sex)</label>
+                            </div>
+                            <select name="Sex" class="custom-select" required>
+                                <option value="0">Nữ</option>
+                                <option value="1">Nam</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Chỉ số Khối cơ thể (BMI)</label>
+                                <span class="val-display" id="bmi-val">25.0 kg/m²</span>
+                            </div>
+                            <input type="range" name="BMI" id="bmi-slider" min="10" max="98" step="0.1" value="25.0" class="range-slider">
+                            <div class="slider-ticks">
+                                <span>Gầy (&lt;18.5)</span>
+                                <span class="tick-norm">Bình thường (18.5-24.9)</span>
+                                <span class="tick-high">Thừa cân (&gt;25)</span>
+                                <span class="tick-danger">Béo phì (&gt;30)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Nhóm tuổi (Age Category)</label>
+                                <span class="val-display" id="age-val">Nhóm 5</span>
+                            </div>
+                            <input type="range" name="Age" id="age-slider" min="1" max="13" value="5" class="range-slider">
+                            <div class="slider-ticks">
+                                <span>Nhóm 1 (18-24)</span>
+                                <span>Nhóm 13 (80+)</span>
+                            </div>
+                        </div>
+
+                        <!-- Nhóm 2: Bệnh lý nền -->
+                        <h3 class="form-group-title mt-4"><i class="fa-solid fa-notes-medical"></i> 2. Tiền sử Bệnh lý</h3>
+                        <div class="toggle-grid">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="HighBP" id="chk-HighBP">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Tăng huyết áp</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="HighChol" id="chk-HighChol">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Mỡ máu cao</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="CholCheck" id="chk-CholCheck" checked>
+                                <span class="checkmark"></span>
+                                <span class="label-text">Khám mỡ máu</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="Stroke" id="chk-Stroke">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Đột quỵ</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="HeartDiseaseorAttack" id="chk-Heart">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Bệnh tim mạch</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="DiffWalk" id="chk-DiffWalk">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Khó khăn đi lại</span>
+                            </label>
+                        </div>
+
+                        <!-- Nhóm 3: Lối sống -->
+                        <h3 class="form-group-title mt-4"><i class="fa-solid fa-leaf"></i> 3. Lối sống & Sinh hoạt</h3>
+                        <div class="toggle-grid">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="Smoker" id="chk-Smoker">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Hút thuốc (100+)</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="HvyAlcoholConsump" id="chk-Alcohol">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Nghiện rượu</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="PhysActivity" id="chk-Phys" checked>
+                                <span class="checkmark"></span>
+                                <span class="label-text">Có tập thể dục</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="Fruits" id="chk-Fruits" checked>
+                                <span class="checkmark"></span>
+                                <span class="label-text">Ăn trái cây</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="Veggies" id="chk-Veggies" checked>
+                                <span class="checkmark"></span>
+                                <span class="label-text">Ăn rau xanh</span>
+                            </label>
+                        </div>
+
+                        <!-- Nhóm 4: Sức khỏe tổng quát -->
+                        <h3 class="form-group-title mt-4"><i class="fa-solid fa-stethoscope"></i> 4. Sức khỏe Tổng quát (30 ngày qua)</h3>
+                        
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Sức khỏe Tự đánh giá (1=Rất tốt, 5=Rất kém)</label>
+                                <span class="val-display" id="gen-val">Mức 2</span>
+                            </div>
+                            <input type="range" name="GenHlth" id="gen-slider" min="1" max="5" value="2" class="range-slider">
+                        </div>
+
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Số ngày ốm thể chất (PhysHlth)</label>
+                                <span class="val-display" id="phys-val">0 ngày</span>
+                            </div>
+                            <input type="range" name="PhysHlth" id="phys-slider" min="0" max="30" value="0" class="range-slider">
+                        </div>
+
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Số ngày bất ổn tinh thần (MentHlth)</label>
+                                <span class="val-display" id="ment-val">0 ngày</span>
+                            </div>
+                            <input type="range" name="MentHlth" id="ment-slider" min="0" max="30" value="0" class="range-slider">
+                        </div>
+
+                        <!-- Nhóm 5: Khác -->
+                        <h3 class="form-group-title mt-4"><i class="fa-solid fa-money-bill-wave"></i> 5. Khả năng Y tế & Kinh tế</h3>
+                        <div class="toggle-grid mb-3">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="AnyHealthcare" id="chk-HealthCare" checked>
+                                <span class="checkmark"></span>
+                                <span class="label-text">Có Bảo hiểm Y tế</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="NoDocbcCost" id="chk-NoDoc">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Bỏ khám vì phí đắt</span>
+                            </label>
+                        </div>
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Học vấn (1-6)</label>
+                                <span class="val-display" id="edu-val">Mức 4</span>
+                            </div>
+                            <input type="range" name="Education" id="edu-slider" min="1" max="6" value="4" class="range-slider">
+                        </div>
+                        <div class="form-group slider-group">
+                            <div class="group-header">
+                                <label class="form-label">Thu nhập (1-8)</label>
+                                <span class="val-display" id="inc-val">Mức 5</span>
+                            </div>
+                            <input type="range" name="Income" id="inc-slider" min="1" max="8" value="5" class="range-slider">
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="btn-primary">
+                            <i class="fa-solid fa-microchip"></i>
+                            <span class="btn-text">PHÂN TÍCH HỒ SƠ</span>
+                            <div class="loader hidden"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: KẾT QUẢ & PHÂN TÍCH -->
+            <div class="right-column">
+                
+                <!-- Kết quả -->
+                <div class="card result-card hidden" id="result-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-chart-pie text-primary"></i>
+                            <h2>Kết Quả Dự Đoán</h2>
+                        </div>
+                    </div>
+                    <div class="result-content">
+                        <div class="gauge-container">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle" id="risk-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.35" class="percentage" id="risk-text">0%</text>
+                            </svg>
+                        </div>
+                        <div class="result-details">
+                            <h3 id="result-title">Khỏe mạnh</h3>
+                            <p id="result-desc">Vui lòng điền form để dự đoán.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Graph -->
+                <div class="card kg-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-diagram-project text-primary"></i>
+                            <h2>Đồ Thị Tri Thức Y Tế (Domain Knowledge Graph)</h2>
+                        </div>
+                        <button class="btn-outline-small" id="load-full-kg-btn">
+                            <i class="fa-solid fa-rotate-right"></i> Xem toàn bộ
+                        </button>
+                    </div>
+                    <div id="network-view" class="kg-container"></div>
+                    
+                    <!-- Chú thích Phân loại Node (Ontology Legend) -->
+                    <div class="kg-legend">
+                        <span class="legend-item"><i class="dot" style="background:#FF6B6B"></i> Yếu tố Nguy cơ</span>
+                        <span class="legend-item"><i class="dot" style="background:#A3CB38"></i> Yếu tố Bảo vệ</span>
+                        <span class="legend-item"><i class="dot" style="background:#EE5A24"></i> Biến chứng</span>
+                        <span class="legend-item"><i class="dot" style="background:#45B7D1"></i> Chỉ số Sức khỏe</span>
+                        <span class="legend-item"><i class="dot" style="background:#6C5CE7"></i> Kết luận Bệnh</span>
+                    </div>
+
+                    <!-- Bảng Chi tiết Node khi Click (Node Inspector) -->
+                    <div class="node-inspector" id="node-inspector">
+                        <div class="inspector-header">
+                            <span class="inspector-title" id="node-name">💡 Bấm vào một Node bất kỳ trên đồ thị để xem cơ chế y học</span>
+                            <span class="inspector-badge" id="node-category">Ontology</span>
+                        </div>
+                        <p class="inspector-desc" id="node-desc">Đồ thị tri thức biểu diễn mạng lưới 15 thực thể và 20 mối quan hệ nhân quả (Causal & Comorbidity Relationships) giải thích cơ chế sinh học của bệnh Đái tháo đường.</p>
+                    </div>
+                </div>
+
+                <!-- AI Chatbot -->
+                <div class="card chat-card" id="chatbot-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-user-doctor text-primary"></i>
+                            <h2>AI Y Tế Tư Vấn</h2>
+                        </div>
+                    </div>
+                    <div class="chat-wrapper">
+                        <div class="chat-history" id="chat-history">
+                            <div class="msg bot">Chào bạn, mình là Bác sĩ AI. Vui lòng điền hồ sơ bên trái và bấm <strong>PHÂN TÍCH</strong> để mình có thể tư vấn chuyên sâu nhé!</div>
+                        </div>
+                        <div class="chat-suggestions" id="chat-suggestions">
+                            <button class="sugg-btn" data-type="medicine">💊 Thuốc</button>
+                            <button class="sugg-btn" data-type="diet">🥗 Ăn uống</button>
+                            <button class="sugg-btn" data-type="exercise">🏃 Vận động</button>
+                            <button class="sugg-btn" data-type="cause">🔍 Nguyên nhân</button>
+                            <button class="sugg-btn" data-type="tests">📋 Xét nghiệm</button>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="Hỏi bác sĩ AI...">
+                            <button type="button" id="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
