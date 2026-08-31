@@ -79,6 +79,15 @@ desktop.ini
 *.h5
 *.onnx
 
+# Reference assignment files and slides
+intel_sys_dev_assignment_02_final.pdf
+intel_sys_dev_slide_02_final.pdf
+assignment_text.txt
+slide_text.txt
+
+# Microsoft Word temporary lock files
+~$*
+
 # Temporary data files & logs
 *.log
 scratch/
