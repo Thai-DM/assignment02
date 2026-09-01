@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#ea580c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ShopeeSense AI">
+  <title>ShopeeSense AI — Phân Tích Cảm Xúc Mobile</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mobile-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-top">
+        <span class="brand-badge"><span class="pulse-dot"></span> NLP SENTIMENT</span>
+        <span class="pwa-status">SELLER CENTRE AI</span>
+      </div>
+      <div class="header-title">
+        <div class="app-icon">🛍️</div>
+        <div>
+          <h1>ShopeeSense Mobile</h1>
+          <p>Phân Tích Sắc Thái Cảm Xúc & CSKH Tự Động</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Screen Content -->
+    <main class="app-content">
+      <!-- Quick Presets -->
+      <section class="preset-section">
+        <label class="section-label">Nhận xét mẫu thử nghiệm (Quick Tests)</label>
+        <div class="preset-scroll">
+          <button type="button" class="preset-btn active" id="presetPositive">
+            <span class="preset-icon">🌟</span>
+            <div>
+              <span class="preset-name">Khen ngợi 5 Sao</span>
+              <span class="preset-sub">Hàng đẹp · Giao siêu nhanh</span>
+            </div>
+          </button>
+          <button type="button" class="preset-btn" id="presetNegative">
+            <span class="preset-icon">💔</span>
+            <div>
+              <span class="preset-name">Khiếu nại 1 Sao</span>
+              <span class="preset-sub">Hàng vỡ nát · Thái độ kém</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Input Form -->
+      <form id="sentimentForm" class="mobile-form">
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">💬</span>
+            <h3>Nội Dung Bình Luận Khách Hàng</h3>
+          </div>
+
+          <div class="input-group">
+            <label for="reviewText">Văn bản đánh giá (Review Text)</label>
+            <textarea id="reviewText" name="review" rows="5" class="mobile-textarea" placeholder="Nhập hoặc dán nội dung nhận xét của khách hàng tại đây..."></textarea>
+          </div>
+
+          <div class="quick-tags">
+            <span class="tag-title">Từ khóa nhanh:</span>
+            <button type="button" class="chip-btn" data-text="Chất lượng tuyệt vời, shop phục vụ chu đáo">👍 Khen chất lượng</button>
+            <button type="button" class="chip-btn" data-text="Shop giao hàng quá chậm, đóng gói sơ sài bị vỡ">👎 Chê giao hàng</button>
+            <button type="button" class="chip-btn" data-text="Hàng không đúng mô tả, lừa đảo">⚠️ Báo lừa đảo</button>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="action-wrap">
+          <button type="submit" id="submitBtn" class="btn-primary">
+            <span class="btn-text">⚡ Phân Tích Cảm Xúc AI</span>
+            <span class="btn-loader" style="display: none;">Đang xử lý NLP...</span>
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <!-- Bottom Sheet Result -->
+    <div class="bottom-sheet" id="resultSheet">
+      <div class="sheet-scrim" id="sheetScrim"></div>
+      <div class="sheet-panel">
+        <div class="sheet-drag-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-tag" id="sentimentBadge">TÍCH CỰC (POSITIVE)</span>
+          <button type="button" class="sheet-close" id="sheetClose">✕</button>
+        </div>
+
+        <div class="result-body">
+          <div class="sentiment-hero-box" id="sentimentHero">
+            <div class="sentiment-icon" id="sentimentIcon">😍</div>
+            <div class="sentiment-meta">
+              <h2 id="sentimentTitle">Đánh Giá Tích Cực</h2>
+              <span class="conf-text" id="confScore">Độ tin cậy mô hình: 98.4% (Linear SVM)</span>
+            </div>
+          </div>
+
+          <div class="cs-action-card" id="csCard">
+            <h4>🎯 Đề Xuất Chiến Lược CSKH Tức Thì:</h4>
+            <div class="action-box" id="csActionBox">
+              <strong>Gửi lời cảm ơn chân thành:</strong>
+              <p>"Dạ Shop chân thành cảm ơn Bạn đã tin tưởng ủng hộ! Shop xin gửi tặng Bạn mã giảm giá 10% cho đơn hàng tiếp theo nhé ❤️"</p>
+            </div>
+          </div>
+
+          <button type="button" class="btn-secondary" id="retestBtn">Phân tích nhận xét khác</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <a href="#sentiment" class="nav-item active">
+        <span class="nav-icon">🛍️</span>
+        <span class="nav-label">Phân Tích</span>
+      </a>
+      <a href="#feedbacks" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Thống Kê</span>
+      </a>
+      <a href="#auto-cs" class="nav-item">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">Auto CSKH</span>
+      </a>
+      <a href="#settings" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Cài Đặt</span>
+      </a>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

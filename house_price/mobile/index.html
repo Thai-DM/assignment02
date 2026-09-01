@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#d97706">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HanoiHome AI">
+  <title>HanoiHome AI — Định Giá BĐS Mobile</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mobile-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-top">
+        <span class="brand-badge"><span class="pulse-dot"></span> ML VALUATION</span>
+        <span class="pwa-status">HÀ NỘI REAL ESTATE</span>
+      </div>
+      <div class="header-title">
+        <div class="app-icon">🏡</div>
+        <div>
+          <h1>HanoiHome Mobile</h1>
+          <p>Thẩm định & Dự toán Giá Nhà đất Hà Nội</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Screen Content -->
+    <main class="app-content">
+      <!-- Quick Presets -->
+      <section class="preset-section">
+        <label class="section-label">Bất động sản mẫu (Quick Presets)</label>
+        <div class="preset-scroll">
+          <button type="button" class="preset-btn active" id="presetTownhouse">
+            <span class="preset-icon">🏬</span>
+            <div>
+              <span class="preset-name">Mặt Phố Cầu Giấy</span>
+              <span class="preset-sub">80 m² · 4 Tầng · Mặt tiền 5m</span>
+            </div>
+          </button>
+          <button type="button" class="preset-btn" id="presetAlley">
+            <span class="preset-icon">🏘️</span>
+            <div>
+              <span class="preset-name">Ngõ Hà Đông</span>
+              <span class="preset-sub">45 m² · 3 Tầng · Giá mềm</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Input Form -->
+      <form id="houseForm" class="mobile-form">
+        <!-- Card 1: Location & Property Type -->
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">📍</span>
+            <h3>Vị Trí & Loại Hình Nhà Ở</h3>
+          </div>
+
+          <div class="input-group">
+            <label for="districtSelect">Quận / Huyện</label>
+            <div class="select-wrap">
+              <select id="districtSelect" name="Quan">
+                <option value="Quận Cầu Giấy" selected>Quận Cầu Giấy (Trung tâm)</option>
+                <option value="Quận Ba Đình">Quận Ba Đình (Lõi đô thị)</option>
+                <option value="Quận Hoàn Kiếm">Quận Hoàn Kiếm (Phố Cổ)</option>
+                <option value="Quận Đống Đa">Quận Đống Đa</option>
+                <option value="Quận Tây Hồ">Quận Tây Hồ (Khu VIP)</option>
+                <option value="Quận Thanh Xuân">Quận Thanh Xuân</option>
+                <option value="Quận Nam Từ Liêm">Quận Nam Từ Liêm</option>
+                <option value="Quận Hà Đông">Quận Hà Đông (Ven đô)</option>
+                <option value="Quận Long Biên">Quận Long Biên</option>
+                <option value="Huyện Gia Lâm">Huyện Gia Lâm</option>
+                <option value="Huyện Đông Anh">Huyện Đông Anh</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="propTypeSelect">Phân khúc Loại hình</label>
+            <div class="select-wrap">
+              <select id="propTypeSelect" name="LoaiHinhNhaO">
+                <option value="Nhà mặt phố, mặt tiền" selected>Nhà mặt phố, mặt tiền (Kinh doanh)</option>
+                <option value="Nhà biệt thự">Nhà biệt thự / Liền kề (Cao cấp)</option>
+                <option value="Nhà phố liền kề">Nhà phố phân lô</option>
+                <option value="Nhà ngõ, hẻm">Nhà trong ngõ / hẻm (Để ở)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="legalSelect">Tình trạng Pháp lý</label>
+            <div class="select-wrap">
+              <select id="legalSelect" name="GiayToPhaply">
+                <option value="Đã có sổ" selected>Đã có sổ đỏ / Sổ hồng chính chủ</option>
+                <option value="Đang chờ sổ">Đang chờ cấp sổ</option>
+                <option value="Giấy tờ khác">Hợp đồng mua bán / Vi bằng</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Dimensions & Structure -->
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">📐</span>
+            <h3>Quy Mô Kích Thước & Kết Cấu</h3>
+          </div>
+
+          <div class="input-group">
+            <div class="label-row">
+              <label for="area">Diện tích đất (m²)</label>
+              <span class="slider-val" id="areaVal">80 m²</span>
+            </div>
+            <input type="range" id="area" name="DienTich" min="15" max="300" step="1" value="80">
+            <div class="range-labels">
+              <span>Nhỏ (25m²)</span>
+              <span>Vừa (80m²)</span>
+              <span>Lớn (200m²+)</span>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="input-group">
+              <label for="floors">Số tầng</label>
+              <input type="number" id="floors" name="SoTang" min="1" max="15" value="4" class="num-input">
+            </div>
+            <div class="input-group">
+              <label for="bedrooms">Số phòng ngủ</label>
+              <input type="number" id="bedrooms" name="SoPhongNgu" min="1" max="20" value="4" class="num-input">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="input-group">
+              <label for="width">Mặt tiền Rộng (m)</label>
+              <input type="number" id="width" name="Rong" min="1" max="30" step="0.5" value="5.0" class="num-input">
+            </div>
+            <div class="input-group">
+              <label for="length">Chiều Dài (m)</label>
+              <input type="number" id="length" name="Dai" min="1" max="50" step="0.5" value="16.0" class="num-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="action-wrap">
+          <button type="submit" id="submitBtn" class="btn-primary">
+            <span class="btn-text">💰 Định Giá Bất Động Sản</span>
+            <span class="btn-loader" style="display: none;">Đang thẩm định...</span>
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <!-- Bottom Sheet Result -->
+    <div class="bottom-sheet" id="resultSheet">
+      <div class="sheet-scrim" id="sheetScrim"></div>
+      <div class="sheet-panel">
+        <div class="sheet-drag-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-tag" id="priceTierBadge">PHÂN KHÚC CAO CẤP</span>
+          <button type="button" class="sheet-close" id="sheetClose">✕</button>
+        </div>
+
+        <div class="result-body">
+          <div class="price-hero-box">
+            <span class="price-title">ĐƠN GIÁ ƯỚC TÍNH AI</span>
+            <div class="price-highlight">
+              <span class="price-num" id="resPriceM2">142.8</span>
+              <span class="price-unit">triệu VND / m²</span>
+            </div>
+            <div class="total-bar">
+              <span>Tổng giá trị ước tính:</span>
+              <strong id="resTotalBillion">≈ 11.42 Tỷ VND</strong>
+            </div>
+          </div>
+
+          <div class="kg-factors-card">
+            <h4>🏢 Trọng số Ảnh hưởng Giá trị (GraphRAG):</h4>
+            <div class="factor-row">
+              <span class="factor-name">Vị trí Quận / Vùng lõi</span>
+              <span class="factor-val high">Ảnh hưởng 60%</span>
+            </div>
+            <div class="factor-row">
+              <span class="factor-name">Mặt phố kinh doanh</span>
+              <span class="factor-val high">+80% Đơn giá</span>
+            </div>
+            <div class="factor-row">
+              <span class="factor-name">Sổ đỏ chính chủ</span>
+              <span class="factor-val ok">Thanh khoản cao</span>
+            </div>
+          </div>
+
+          <button type="button" class="btn-secondary" id="retestBtn">Định giá căn khác</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <a href="#valuation" class="nav-item active">
+        <span class="nav-icon">🏡</span>
+        <span class="nav-label">Định Giá</span>
+      </a>
+      <a href="#map" class="nav-item">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">Bản Đồ Giá</span>
+      </a>
+      <a href="#advisor" class="nav-item">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">Tư Vấn AI</span>
+      </a>
+      <a href="#saved" class="nav-item">
+        <span class="nav-icon">⭐</span>
+        <span class="nav-label">Đã Lưu</span>
+      </a>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

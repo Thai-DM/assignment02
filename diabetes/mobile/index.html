@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DiaCare AI">
+  <title>DiaCare AI — Sàng Lọc Tiểu Đường Mobile</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mobile-container">
+    <!-- iOS / Android Status Bar Simulation -->
+    <header class="app-header">
+      <div class="header-top">
+        <span class="brand-badge"><span class="pulse-dot"></span> AI CLINICAL</span>
+        <span class="pwa-status" id="pwaStatus">ONLINE</span>
+      </div>
+      <div class="header-title">
+        <div class="app-icon">🩺</div>
+        <div>
+          <h1>DiaCare AI Mobile</h1>
+          <p>Sàng lọc & Đánh giá Nguy cơ Đái tháo đường</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Screen Content -->
+    <main class="app-content">
+      <!-- Quick Presets -->
+      <section class="preset-section">
+        <label class="section-label">Hồ sơ mẫu nhanh (Quick Presets)</label>
+        <div class="preset-scroll">
+          <button type="button" class="preset-btn active" id="presetHealthy">
+            <span class="preset-icon">🥗</span>
+            <div>
+              <span class="preset-name">Người Khỏe Mạnh</span>
+              <span class="preset-sub">BMI 22 · Trẻ tuổi</span>
+            </div>
+          </button>
+          <button type="button" class="preset-btn" id="presetAtRisk">
+            <span class="preset-icon">⚠️</span>
+            <div>
+              <span class="preset-name">Nguy Cơ Cao</span>
+              <span class="preset-sub">BMI 34 · Cao huyết áp</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Input Form -->
+      <form id="diabetesForm" class="mobile-form">
+        <!-- Group 1: Core Physical Indicators -->
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">📊</span>
+            <h3>Chỉ số Thể chất & Sinh học</h3>
+          </div>
+          
+          <div class="input-group">
+            <div class="label-row">
+              <label for="bmi">Chỉ số khối cơ thể (BMI)</label>
+              <span class="slider-val" id="bmiVal">28.5 kg/m²</span>
+            </div>
+            <input type="range" id="bmi" name="BMI" min="12" max="60" step="0.5" value="28.5">
+            <div class="range-labels">
+              <span>Gầy (<18.5)</span>
+              <span>Chuẩn (22)</span>
+              <span>Béo phì (>30)</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="label-row">
+              <label for="age">Nhóm tuổi (Age Group)</label>
+              <span class="slider-val" id="ageVal">50 - 54 tuổi (Nhóm 7)</span>
+            </div>
+            <input type="range" id="age" name="Age" min="1" max="13" step="1" value="7">
+            <div class="range-labels">
+              <span>18-24</span>
+              <span>45-54</span>
+              <span>80+</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="label-row">
+              <label for="genHlth">Đánh giá sức khỏe tổng quát (GenHlth)</label>
+              <span class="slider-val" id="genHlthVal">3 - Khá tốt</span>
+            </div>
+            <input type="range" id="genHlth" name="GenHlth" min="1" max="5" step="1" value="3">
+            <div class="range-labels">
+              <span>1 (Rất tốt)</span>
+              <span>3 (Khá)</span>
+              <span>5 (Kém)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2: Medical Conditions (Switches) -->
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">🫀</span>
+            <h3>Bệnh lý nền & Lối sống</h3>
+          </div>
+
+          <div class="switch-item">
+            <div class="switch-info">
+              <span class="switch-title">Tăng Huyết Áp (HighBP)</span>
+              <span class="switch-desc">Bác sĩ từng chẩn đoán huyết áp cao</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="highBP" name="HighBP" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-item">
+            <div class="switch-info">
+              <span class="switch-title">Mỡ Máu Cao (HighChol)</span>
+              <span class="switch-desc">Cholesterol toàn phần trong máu cao</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="highChol" name="HighChol" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-item">
+            <div class="switch-info">
+              <span class="switch-title">Vận Động Thể Chất (PhysActivity)</span>
+              <span class="switch-desc">Có tập thể dục trong 30 ngày qua</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="physActivity" name="PhysActivity" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-item">
+            <div class="switch-info">
+              <span class="switch-title">Hút Thuốc Lá (Smoker)</span>
+              <span class="switch-desc">Đã hút trên 100 điếu thuốc trong đời</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="smoker" name="Smoker">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-item">
+            <div class="switch-info">
+              <span class="switch-title">Khó Khăn Đi Lại (DiffWalk)</span>
+              <span class="switch-desc">Gặp khó khăn khi leo cầu thang hoặc đi bộ</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="diffWalk" name="DiffWalk">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="action-wrap">
+          <button type="submit" id="submitBtn" class="btn-primary">
+            <span class="btn-text">⚡ Phân Tích & Chẩn Đoán AI</span>
+            <span class="btn-loader" style="display: none;">Đang phân tích...</span>
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <!-- Bottom Sheet Result -->
+    <div class="bottom-sheet" id="resultSheet">
+      <div class="sheet-scrim" id="sheetScrim"></div>
+      <div class="sheet-panel">
+        <div class="sheet-drag-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-tag" id="riskBadge">NGUY CƠ CAO</span>
+          <button type="button" class="sheet-close" id="sheetClose">✕</button>
+        </div>
+
+        <div class="result-body">
+          <div class="result-score-box" id="resultScoreBox">
+            <div class="score-circle">
+              <span class="score-number" id="riskProb">82%</span>
+              <span class="score-label">Xác suất mắc</span>
+            </div>
+            <div class="score-info">
+              <h2 id="riskTitle">Cảnh Báo Nguy Cơ Cao</h2>
+              <p id="riskDesc">Mô hình nhận diện các yếu tố nguy cơ đề kháng insulin và hội chứng chuyển hóa.</p>
+            </div>
+          </div>
+
+          <div class="insight-card">
+            <h4>💡 Khuyến nghị Y tế Lâm sàng (GraphRAG):</h4>
+            <ul id="recommendationsList" class="recommend-list">
+              <li>Cần tiến hành xét nghiệm đường huyết lúc đói (Fasting Glucose) và HbA1c tại cơ sở y tế.</li>
+              <li>Kiểm soát chế độ ăn giảm đường tinh luyện và tăng cường chất xơ hòa tan.</li>
+            </ul>
+          </div>
+
+          <button type="button" class="btn-secondary" id="retestBtn">Kiểm tra lại ca khác</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <a href="#home" class="nav-item active">
+        <span class="nav-icon">🩺</span>
+        <span class="nav-label">Chẩn Đoán</span>
+      </a>
+      <a href="#history" class="nav-item">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">Lịch Sử</span>
+      </a>
+      <a href="#knowledge" class="nav-item">
+        <span class="nav-icon">🕸️</span>
+        <span class="nav-label">Đồ Thị Y Tế</span>
+      </a>
+      <a href="#about" class="nav-item">
+        <span class="nav-icon">ℹ️</span>
+        <span class="nav-label">Thông Tin</span>
+      </a>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

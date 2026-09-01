@@ -543,7 +543,11 @@ Nhiệm vụ của bạn là tư vấn cho bệnh nhân một cách ân cần, c
 
 from fastapi.staticfiles import StaticFiles
 
-# ── Mount Frontend Static Files ──────────────────────────────────────────────
+# ── Mount Frontend & Mobile Static Files ─────────────────────────────────────
+MOBILE_DIR = Path(__file__).parent.parent / "mobile"
+if MOBILE_DIR.exists():
+    app.mount("/mobile", StaticFiles(directory=str(MOBILE_DIR), html=True), name="mobile")
+
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

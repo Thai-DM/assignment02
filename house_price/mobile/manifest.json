@@ -1,0 +1,21 @@
+{
+  "name": "HanoiHome AI Mobile",
+  "short_name": "HanoiHome",
+  "description": "Ứng dụng Thẩm định & Định giá Bất động sản Hà Nội Mobile",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#fcfbf9",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/619/619153.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/619/619153.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -462,7 +462,11 @@ Nhiệm vụ của bạn là hỗ trợ chủ shop phân tích tâm lý khách h
             }
 
 
-# ── Mount Frontend Static Files ──────────────────────────────────────────────
+# ── Mount Frontend & Mobile Static Files ─────────────────────────────────────
+MOBILE_DIR = Path(__file__).parent.parent / "mobile"
+if MOBILE_DIR.exists():
+    app.mount("/mobile", StaticFiles(directory=str(MOBILE_DIR), html=True), name="mobile")
+
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 
