@@ -7,7 +7,57 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Sliders and Value Display Handlers
+// Global State
+let currentPredictionResult = null;
+let currentPatientData = null;
+let chatHistory = [];
+let networkInstance = null;
+
+// ==============================================================================
+// TAB NAVIGATION
+// ==============================================================================
+const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+const tabPanes = document.querySelectorAll('.tab-pane');
+const headerTitle = document.getElementById('headerTitle');
+const headerSubtitle = document.getElementById('headerSubtitle');
+const headerIcon = document.getElementById('headerIcon');
+
+const tabMeta = {
+  tabPredict: { title: "DiaCare AI Mobile", sub: "Sàng lọc & Đánh giá Nguy cơ Đái tháo đường", icon: "🩺" },
+  tabKg: { title: "Đồ Thị Tri Thức Y Tế", sub: "Mạng lưới Y văn & Luật Lâm sàng Y học (GraphRAG)", icon: "🕸️" },
+  tabChat: { title: "Bác Sĩ AI GraphRAG", sub: "Tư vấn Trực tuyến & Giải thích Chỉ số Sức khỏe", icon: "🤖" }
+};
+
+function switchTab(tabId) {
+  navItems.forEach(item => {
+    item.classList.toggle('active', item.getAttribute('data-tab') === tabId);
+  });
+
+  tabPanes.forEach(pane => {
+    pane.classList.toggle('active', pane.id === tabId);
+  });
+
+  if (tabMeta[tabId]) {
+    headerTitle.textContent = tabMeta[tabId].title;
+    headerSubtitle.textContent = tabMeta[tabId].sub;
+    headerIcon.textContent = tabMeta[tabId].icon;
+  }
+
+  if (tabId === 'tabKg' && !networkInstance) {
+    initMobileKnowledgeGraph();
+  }
+}
+
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const targetTab = item.getAttribute('data-tab');
+    switchTab(targetTab);
+  });
+});
+
+// ==============================================================================
+// PREDICTION FORM LOGIC
+// ==============================================================================
 const bmiSlider = document.getElementById('bmi');
 const bmiVal = document.getElementById('bmiVal');
 const ageSlider = document.getElementById('age');
@@ -38,14 +88,11 @@ genHlthSlider.addEventListener('input', (e) => {
   genHlthVal.textContent = genHlthLabels[e.target.value] || `Thang ${e.target.value}`;
 });
 
-// Presets
 const presetHealthy = document.getElementById('presetHealthy');
 const presetAtRisk = document.getElementById('presetAtRisk');
 const highBP = document.getElementById('highBP');
 const highChol = document.getElementById('highChol');
 const physActivity = document.getElementById('physActivity');
-const smoker = document.getElementById('smoker');
-const diffWalk = document.getElementById('diffWalk');
 
 presetHealthy.addEventListener('click', () => {
   presetHealthy.classList.add('active');
@@ -61,8 +108,6 @@ presetHealthy.addEventListener('click', () => {
   highBP.checked = false;
   highChol.checked = false;
   physActivity.checked = true;
-  smoker.checked = false;
-  diffWalk.checked = false;
 });
 
 presetAtRisk.addEventListener('click', () => {
@@ -79,8 +124,6 @@ presetAtRisk.addEventListener('click', () => {
   highBP.checked = true;
   highChol.checked = true;
   physActivity.checked = false;
-  smoker.checked = true;
-  diffWalk.checked = true;
 });
 
 // Bottom Sheet Controls
@@ -88,6 +131,7 @@ const resultSheet = document.getElementById('resultSheet');
 const sheetScrim = document.getElementById('sheetScrim');
 const sheetClose = document.getElementById('sheetClose');
 const retestBtn = document.getElementById('retestBtn');
+const askDoctorBtn = document.getElementById('askDoctorBtn');
 
 function openSheet() {
   resultSheet.classList.add('show');
@@ -101,7 +145,14 @@ sheetScrim.addEventListener('click', closeSheet);
 sheetClose.addEventListener('click', closeSheet);
 retestBtn.addEventListener('click', closeSheet);
 
-// Form Submission & API Call
+askDoctorBtn.addEventListener('click', () => {
+  closeSheet();
+  switchTab('tabChat');
+  // Auto send prompt
+  sendChatMessage("Bác sĩ ơi, từ kết quả chẩn đoán trên, xin bác sĩ phân tích sâu và cho tôi lời khuyên phòng ngừa cụ thể?");
+});
+
+// Form Submission
 const diabetesForm = document.getElementById('diabetesForm');
 const submitBtn = document.getElementById('submitBtn');
 const btnText = submitBtn.querySelector('.btn-text');
@@ -119,7 +170,7 @@ diabetesForm.addEventListener('submit', async (e) => {
     HighChol: highChol.checked ? 1 : 0,
     CholCheck: 1,
     BMI: parseFloat(bmiSlider.value),
-    Smoker: smoker.checked ? 1 : 0,
+    Smoker: 0,
     Stroke: 0,
     HeartDiseaseorAttack: 0,
     PhysActivity: physActivity.checked ? 1 : 0,
@@ -131,16 +182,17 @@ diabetesForm.addEventListener('submit', async (e) => {
     GenHlth: parseInt(genHlthSlider.value),
     MentHlth: 0,
     PhysHlth: 0,
-    DiffWalk: diffWalk.checked ? 1 : 0,
+    DiffWalk: 0,
     Sex: 1,
     Age: parseInt(ageSlider.value),
     Education: 5,
     Income: 6
   };
 
-  // Determine API base URL
-  const apiUrl = window.location.origin.includes(':8001') 
-    ? `${window.location.origin}/predict` 
+  currentPatientData = payload;
+
+  const apiUrl = window.location.origin.includes(':8001')
+    ? `${window.location.origin}/predict`
     : 'http://localhost:8001/predict';
 
   try {
@@ -150,21 +202,23 @@ diabetesForm.addEventListener('submit', async (e) => {
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) throw new Error('Không thể kết nối tới máy chủ dự đoán.');
+    if (!response.ok) throw new Error('Không thể kết nối máy chủ chẩn đoán.');
 
     const result = await response.json();
+    currentPredictionResult = result;
     renderResult(result);
   } catch (err) {
-    console.warn('API fetch failed, falling back to client-side clinical model for demo:', err);
-    // Fallback heuristic if API offline
-    const isAtRisk = (payload.HighBP + payload.HighChol + (payload.BMI > 30 ? 2 : 0) + (payload.Age > 7 ? 2 : 0) + (payload.GenHlth >= 3 ? 2 : 0)) >= 4;
+    console.warn('API fallback for mobile demo:', err);
+    const isAtRisk = (payload.HighBP + payload.HighChol + (payload.BMI > 30 ? 2 : 0) + (payload.Age > 7 ? 2 : 0)) >= 3;
     const fakeProb = isAtRisk ? 0.82 : 0.18;
-    renderResult({
+    const fakeResult = {
       prediction: isAtRisk ? 1 : 0,
       probability: [1 - fakeProb, fakeProb],
-      risk_level: isAtRisk ? "Nguy Cơ Cao" : "Nguy Cơ Thấp",
-      risk_color: isAtRisk ? "#EF4444" : "#10B981"
-    });
+      prediction_label: isAtRisk ? "Nguy Cơ Mắc Bệnh Cao" : "Nguy Cơ Thấp / Bình Thường",
+      confidence: fakeProb
+    };
+    currentPredictionResult = fakeResult;
+    renderResult(fakeResult);
   } finally {
     btnText.style.display = 'inline';
     btnLoader.style.display = 'none';
@@ -211,4 +265,211 @@ function renderResult(data) {
   }
 
   openSheet();
+}
+
+// ==============================================================================
+// KNOWLEDGE GRAPH (VIS.JS) MOBILE INITIALIZATION
+// ==============================================================================
+async function initMobileKnowledgeGraph() {
+  const container = document.getElementById('kgCanvasMobile');
+  if (!container) return;
+
+  const kgApiUrl = window.location.origin.includes(':8001')
+    ? `${window.location.origin}/knowledge-graph`
+    : 'http://localhost:8001/knowledge-graph';
+
+  let kgData = null;
+  try {
+    const res = await fetch(kgApiUrl);
+    if (res.ok) kgData = await res.json();
+  } catch (e) {
+    console.log('Using local fallback KG data');
+  }
+
+  if (!kgData) {
+    kgData = {
+      nodes: [
+        { id: "Patient", label: "Bệnh Nhân", color: "#4ECDC4" },
+        { id: "HighBP", label: "Cao Huyết Áp", color: "#FF6B6B" },
+        { id: "BMI", label: "Chỉ số BMI", color: "#FF6B6B" },
+        { id: "HighChol", label: "Mỡ Máu Cao", color: "#FF6B6B" },
+        { id: "Diabetes", label: "Tiểu Đường Type 2", color: "#FFD93D" },
+        { id: "Nephropathy", label: "Biến Chứng Thận", color: "#6C5CE7" },
+        { id: "Retinopathy", label: "Võng Mạc Mắt", color: "#6C5CE7" },
+        { id: "Cardiovascular", label: "Bệnh Tim Mạch", color: "#6C5CE7" }
+      ],
+      edges: [
+        { from: "Patient", to: "HighBP" },
+        { from: "Patient", to: "BMI" },
+        { from: "Patient", to: "HighChol" },
+        { from: "HighBP", to: "Diabetes" },
+        { from: "BMI", to: "Diabetes" },
+        { from: "HighChol", to: "Diabetes" },
+        { from: "Diabetes", to: "Nephropathy" },
+        { from: "Diabetes", to: "Retinopathy" },
+        { from: "Diabetes", to: "Cardiovascular" }
+      ]
+    };
+  }
+
+  const nodes = new vis.DataSet(
+    (kgData.nodes || []).map(n => ({
+      id: n.id,
+      label: n.label_vn || n.label || n.id,
+      color: {
+        background: n.color || "#3b82f6",
+        border: "#ffffff",
+        highlight: { background: "#2563eb", border: "#1d4ed8" }
+      },
+      font: { color: "#ffffff", size: 12, face: "Plus Jakarta Sans" },
+      shape: "box",
+      margin: 8,
+      shadow: true
+    }))
+  );
+
+  const edges = new vis.DataSet(
+    (kgData.edges || []).map(e => ({
+      from: e.source || e.from,
+      to: e.target || e.to,
+      label: e.relation ? `${e.relation} (${e.weight || ''})` : "",
+      font: { size: 9, color: "#64748b", align: "horizontal" },
+      arrows: "to",
+      color: { color: "#94a3b8", highlight: "#2563eb" },
+      smooth: { type: "continuous" }
+    }))
+  );
+
+  const data = { nodes, edges };
+  const options = {
+    physics: {
+      solver: "forceAtlas2Based",
+      forceAtlas2Based: { gravitationalConstant: -35, centralGravity: 0.01, springLength: 70 },
+      stabilization: { iterations: 100 }
+    },
+    interaction: { zoomView: true, dragView: true }
+  };
+
+  networkInstance = new vis.Network(container, data, options);
+}
+
+// ==============================================================================
+// AI CHATBOT MOBILE LOGIC
+// ==============================================================================
+const chatMessages = document.getElementById('chatMessages');
+const chatForm = document.getElementById('chatForm');
+const chatInput = document.getElementById('chatInput');
+const promptChips = document.querySelectorAll('.prompt-chip');
+
+promptChips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    const text = chip.getAttribute('data-prompt');
+    sendChatMessage(text);
+  });
+});
+
+chatForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const text = chatInput.value.trim();
+  if (text) {
+    sendChatMessage(text);
+    chatInput.value = '';
+  }
+});
+
+async function sendChatMessage(msgText) {
+  // Append User message
+  appendBubble('user', msgText);
+
+  // Append AI loading bubble
+  const aiBubbleId = `aiMsg_${Date.now()}`;
+  appendLoadingBubble(aiBubbleId);
+
+  const chatApiUrl = window.location.origin.includes(':8001')
+    ? `${window.location.origin}/chat`
+    : 'http://localhost:8001/chat';
+
+  const payload = {
+    message: msgText,
+    patient_data: currentPatientData || { BMI: 28.5, Age: 7, HighBP: 1, HighChol: 1, PhysActivity: 1, GenHlth: 3 },
+    prediction: currentPredictionResult || { prediction_label: "Nguy cơ cao", confidence: 0.82 },
+    history: chatHistory.slice(-4)
+  };
+
+  try {
+    const res = await fetch(chatApiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('Không thể kết nối Bác sĩ AI.');
+
+    const data = await res.json();
+    updateAiBubble(aiBubbleId, data.reply);
+    chatHistory.push({ role: "user", content: msgText });
+    chatHistory.push({ role: "assistant", content: data.reply });
+  } catch (err) {
+    console.warn('Chat API fallback:', err);
+    // Clinical fallback
+    const fallbackReply = `Chào bạn! Dựa trên chỉ số của bạn (BMI: ${payload.patient_data.BMI}, Tăng huyết áp: ${payload.patient_data.HighBP ? 'Có' : 'Không'}), mô hình đánh giá bạn có nguy cơ đề kháng insulin. 
+    
+Khuyến nghị từ Bác sĩ AI:
+1. **Xét nghiệm:** Đến viện làm xét nghiệm máu HbA1c và Đường huyết lúc đói.
+2. **Dinh dưỡng:** Giảm đồ ngọt tinh chế, tăng rau xanh có chỉ số đường thấp.
+3. **Vận động:** Đi bộ nhanh tối thiểu 30 phút mỗi ngày.`;
+    updateAiBubble(aiBubbleId, fallbackReply);
+  }
+}
+
+function appendBubble(sender, text) {
+  const bubble = document.createElement('div');
+  bubble.className = `chat-bubble ${sender}`;
+
+  const avatar = sender === 'ai' ? '👨‍⚕️' : '👤';
+  const name = sender === 'ai' ? 'Bác sĩ AI (GraphRAG)' : 'Bạn';
+
+  bubble.innerHTML = `
+    <div class="bubble-avatar">${avatar}</div>
+    <div class="bubble-content">
+      <strong>${name}:</strong>
+      <p>${formatText(text)}</p>
+    </div>
+  `;
+
+  chatMessages.appendChild(bubble);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function appendLoadingBubble(id) {
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble ai';
+  bubble.id = id;
+  bubble.innerHTML = `
+    <div class="bubble-avatar">👨‍⚕️</div>
+    <div class="bubble-content">
+      <strong>Bác sĩ AI (GraphRAG):</strong>
+      <p><em>Đang tra cứu đồ thị tri thức và suy nghĩ...</em></p>
+    </div>
+  `;
+  chatMessages.appendChild(bubble);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function updateAiBubble(id, text) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.querySelector('.bubble-content').innerHTML = `
+      <strong>Bác sĩ AI (GraphRAG):</strong>
+      <p>${formatText(text)}</p>
+    `;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+}
+
+function formatText(text) {
+  return text
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 }
